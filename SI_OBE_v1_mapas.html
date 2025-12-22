@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistema OBE</title>
+
+    <!-- Recursos ESSENCIAIS e LEVES (Apenas o necessário para Leaflet + Awesome Markers) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+
+    <style>
+        body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+        header { background:#1a1a1a; padding:20px; text-align:center; }
+        h1 { margin:0; font-size:2.2rem; }
+        .logos { display:flex; justify-content:space-between; padding:20px; max-width:1000px; margin:0 auto; }
+        .logos img { max-height:100px; object-fit:contain; }
+        .container { padding:20px; text-align:center; flex:1; }
+        .buttons-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:20px; max-width:1000px; margin:0 auto; }
+        .btn { background:#1a1a1a; color:white; padding:30px 15px; font-size:1.4rem; font-weight:bold; text-decoration:none; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.6); border:2px solid transparent; }
+        .btn:hover { transform:translateY(-5px); }
+        .btn:nth-child(1){border-color:#8B0000;} .btn:nth-child(2){border-color:#003366;} .btn:nth-child(3){border-color:#4A4A4A;}
+        .btn:nth-child(4){border-color:#8B0000;} .btn:nth-child(5){border-color:#003366;} .btn:nth-child(6){border-color:#4A4A4A;}
+        .content-section { display:none; flex:1; padding:10px; }
+        .content-section.active { display:block; }
+        .back-btn { display:inline-block; margin:15px 0; padding:10px 20px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
+        .folium-map { width:100%; height:80vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        footer { text-align:center; padding:15px; background:#1a1a1a; font-size:0.8rem; color:#888; }
+    </style>
+</head>
+<body>
+
+    <header><h1>Sistema de Informação OBE</h1></header>
+
+    <div class="logos">
+        <img src="ESSGT.png" alt="ESSGT">
+        <img src="pmesp.png" alt="PMESP">
+    </div>
+
+    <div id="menu-principal" class="container">
+        <div class="buttons-grid">
+            <a href="#" class="btn">Mapa Força</a>
+            <a href="#" onclick="mostrarMapa('interesse'); return false;" class="btn">Locais de Interesse</a>
+            <a href="#" onclick="mostrarMapa('apoio'); return false;" class="btn">Pontos de Apoio</a>
+            <a href="#" class="btn">POP's</a>
+            <a href="#" class="btn">RSO</a>
+            <a href="#" class="btn">Inserção de Resultados</a>
+        </div>
+    </div>
+
+    <div id="mapa-interesse" class="content-section">
+        <a href="#" onclick="voltarMenu(); return false;" class="back-btn">← Voltar</a>
+        <h2 style="text-align:center;">Locais de Interesse - SP</h2>
+        <div class="folium-map" id="map_20c9ff3f7b1a0ed740f4a41d4fb7a08a" style="width:100%; height:80vh;"></div>
+    </div>
+
+    <div id="mapa-apoio" class="content-section">
+        <a href="#" onclick="voltarMenu(); return false;" class="back-btn">← Voltar</a>
+        <h2 style="text-align:center;">Pontos de Apoio - Vila Leopoldina</h2>
+        <div class="folium-map" id="map_b8f69d71cba95d98f775f1edef1d60a9" style="width:100%; height:80vh;"></div>
+    </div>
+
+    <footer>Sistema de Informação OBE • 2025</footer>
+
+    <script>
+        // Scripts dos mapas (executados só quando necessário)
+        function initMapaInteresse() {
+            if (!window.mapaInteresseInit) {
+                var map_20c9ff3f7b1a0ed740f4a41d4fb7a08a = L.map(
+                "map_20c9ff3f7b1a0ed740f4a41d4fb7a08a",
+                {
+                    center: [-23.55052, -46.633308],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_eeab2e38e7c7da1c2e5ce17f84cf3d6f = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_eeab2e38e7c7da1c2e5ce17f84cf3d6f.addTo(map_20c9ff3f7b1a0ed740f4a41d4fb7a08a);
+        
+    
+            var marker_9967c2d687c447febe0d8c7ee43dd2b1 = L.marker(
+                [-23.5375218, -46.7311673],
+                {
+}
+            ).addTo(map_20c9ff3f7b1a0ed740f4a41d4fb7a08a);
+        
+    
+        var popup_7e478a957f6502da0f3abb42a430d2f4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2786d61912a92a71c117f41d294874ba = $(`<div id="html_2786d61912a92a71c117f41d294874ba" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> 91º DP<br>             <b>Endereço:</b> Av. Dr. Gastão Vidigal, 307 - Vila Leopoldina, São Paulo - SP, 05314-001<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/dX4APjDgWuFg7NBw7" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_7e478a957f6502da0f3abb42a430d2f4.setContent(html_2786d61912a92a71c117f41d294874ba);
+            
+        
+
+        marker_9967c2d687c447febe0d8c7ee43dd2b1.bindPopup(popup_7e478a957f6502da0f3abb42a430d2f4)
+        ;
+
+        
+    
+    
+            marker_9967c2d687c447febe0d8c7ee43dd2b1.bindTooltip(
+                `<div>
+                     91º DP
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_24e49158c621f7a997a977324e1c447c = L.marker(
+                [-23.5560149, -46.6710487],
+                {
+}
+            ).addTo(map_20c9ff3f7b1a0ed740f4a41d4fb7a08a);
+        
+    
+        var popup_6af564b8e350c2997eb842a4fee2cd77 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c8d68c84acbe71d1158599ed08c2e7b9 = $(`<div id="html_c8d68c84acbe71d1158599ed08c2e7b9" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> IML<br>             <b>Endereço:</b> Av. Dr. Enéas Carvalho de Aguiar, 600 - Cerqueira César, São Paulo - SP, 05403-000<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/1HGUcnTowkiGAvSTA" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_6af564b8e350c2997eb842a4fee2cd77.setContent(html_c8d68c84acbe71d1158599ed08c2e7b9);
+            
+        
+
+        marker_24e49158c621f7a997a977324e1c447c.bindPopup(popup_6af564b8e350c2997eb842a4fee2cd77)
+        ;
+
+        
+    
+    
+            marker_24e49158c621f7a997a977324e1c447c.bindTooltip(
+                `<div>
+                     IML
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_d8e8632837667331797a91fefeb7e66f = L.marker(
+                [-23.5680103, -46.7106181],
+                {
+}
+            ).addTo(map_20c9ff3f7b1a0ed740f4a41d4fb7a08a);
+        
+    
+        var popup_61da606b010393cd0d0c263b98c48d30 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1f3ae982623394a448d0dddbde449f1a = $(`<div id="html_1f3ae982623394a448d0dddbde449f1a" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> IC<br>             <b>Endereço:</b> R. Moncorvo Filho, 410 - Butantã, São Paulo - SP, 05507-060<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/PekiRBpwQ9n6FRoD8" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_61da606b010393cd0d0c263b98c48d30.setContent(html_1f3ae982623394a448d0dddbde449f1a);
+            
+        
+
+        marker_d8e8632837667331797a91fefeb7e66f.bindPopup(popup_61da606b010393cd0d0c263b98c48d30)
+        ;
+
+        
+    
+    
+            marker_d8e8632837667331797a91fefeb7e66f.bindTooltip(
+                `<div>
+                     IC
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_8bacd1a759b238e8f090ca52aee6c331 = L.marker(
+                [-23.5378475, -46.7223793],
+                {
+}
+            ).addTo(map_20c9ff3f7b1a0ed740f4a41d4fb7a08a);
+        
+    
+        var popup_601f81910de802ab1e1dabaabb2b0def = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d90992b7b0a90bd563e9a384a759edc4 = $(`<div id="html_d90992b7b0a90bd563e9a384a759edc4" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> PS MUNICIPAL - LAPA<br>             <b>Endereço:</b> Av. Queiroz Filho, 313 - Vila Hamburguesa, São Paulo - SP, 02675-031<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/UnNQU7TU6n9z9Wdq5" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_601f81910de802ab1e1dabaabb2b0def.setContent(html_d90992b7b0a90bd563e9a384a759edc4);
+            
+        
+
+        marker_8bacd1a759b238e8f090ca52aee6c331.bindPopup(popup_601f81910de802ab1e1dabaabb2b0def)
+        ;
+
+        
+    
+    
+            marker_8bacd1a759b238e8f090ca52aee6c331.bindTooltip(
+                `<div>
+                     PS MUNICIPAL - LAPA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_2d552bde1b64fba70e8a525088f3f5f6 = L.marker(
+                [-23.5255223, -46.7152295],
+                {
+}
+            ).addTo(map_20c9ff3f7b1a0ed740f4a41d4fb7a08a);
+        
+    
+        var popup_2db0119fcce3ffb3367b65290c70cfad = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c96e18136053f998f0c1e72d3c005859 = $(`<div id="html_c96e18136053f998f0c1e72d3c005859" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> HOSPITAL ALBERT SABIN<br>             <b>Endereço:</b> R. Brg. Gavião Peixoto, 123 - Lapa, São Paulo - SP, 05078-000<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/6e1rcEVutWSvo9uX6" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_2db0119fcce3ffb3367b65290c70cfad.setContent(html_c96e18136053f998f0c1e72d3c005859);
+            
+        
+
+        marker_2d552bde1b64fba70e8a525088f3f5f6.bindPopup(popup_2db0119fcce3ffb3367b65290c70cfad)
+        ;
+
+        
+    
+    
+            marker_2d552bde1b64fba70e8a525088f3f5f6.bindTooltip(
+                `<div>
+                     HOSPITAL ALBERT SABIN
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_a9590cb3873b993a498765c27aa7adba = L.marker(
+                [-23.5560149, -46.6710487],
+                {
+}
+            ).addTo(map_20c9ff3f7b1a0ed740f4a41d4fb7a08a);
+        
+    
+        var popup_6de30ebd85d3b6da45bb5deefea1d041 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bc2828cf937d4afc38844d294a3094e9 = $(`<div id="html_bc2828cf937d4afc38844d294a3094e9" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> HOSPITAL DAS CLÍNICAS<br>             <b>Endereço:</b> Av. Dr. Enéas Carvalho de Aguiar, 255 - Cerqueira César, São Paulo - SP, 05403-000<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/5LDUwnobYGoyBCoNA" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_6de30ebd85d3b6da45bb5deefea1d041.setContent(html_bc2828cf937d4afc38844d294a3094e9);
+            
+        
+
+        marker_a9590cb3873b993a498765c27aa7adba.bindPopup(popup_6de30ebd85d3b6da45bb5deefea1d041)
+        ;
+
+        
+    
+    
+            marker_a9590cb3873b993a498765c27aa7adba.bindTooltip(
+                `<div>
+                     HOSPITAL DAS CLÍNICAS
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+                window.mapaInteresseInit = true;
+                setTimeout(() => L.map('map_20c9ff3f7b1a0ed740f4a41d4fb7a08a').invalidateSize(), 300);
+            }
+        }
+
+        function initMapaApoio() {
+            if (!window.mapaApoioInit) {
+                var map_b8f69d71cba95d98f775f1edef1d60a9 = L.map(
+                "map_b8f69d71cba95d98f775f1edef1d60a9",
+                {
+                    center: [-23.5329, -46.7333],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 14,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a67941df4780b1a913a0eb0e9aec64e7 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_a67941df4780b1a913a0eb0e9aec64e7.addTo(map_b8f69d71cba95d98f775f1edef1d60a9);
+        
+    
+            var marker_bcd361201893033d803c2ece5cdf4827 = L.marker(
+                [-23.5310141, -46.7293241],
+                {
+}
+            ).addTo(map_b8f69d71cba95d98f775f1edef1d60a9);
+        
+    
+            var icon_7f0bc8ec02f535b43ceda4cdf88e7540 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_72a8a6b8cd8a09afa959def5e2e5a367 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bb36589f13d98bdec23eaf9a141f1621 = $(`<div id="html_bb36589f13d98bdec23eaf9a141f1621" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> IGREJA UNIVERSAL - VILA LEOPOLDINA<br>             <b>Endereço:</b> R. Schilling, 512 - Vila Leopoldina, São Paulo - SP, 05302-001<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/eCDZKRoYsGgRiYMo6" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_72a8a6b8cd8a09afa959def5e2e5a367.setContent(html_bb36589f13d98bdec23eaf9a141f1621);
+            
+        
+
+        marker_bcd361201893033d803c2ece5cdf4827.bindPopup(popup_72a8a6b8cd8a09afa959def5e2e5a367)
+        ;
+
+        
+    
+    
+            marker_bcd361201893033d803c2ece5cdf4827.bindTooltip(
+                `<div>
+                     IGREJA UNIVERSAL - VILA LEOPOLDINA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_bcd361201893033d803c2ece5cdf4827.setIcon(icon_7f0bc8ec02f535b43ceda4cdf88e7540);
+            
+    
+            var marker_4eae79ced42f7a233568ca03c8cacf95 = L.marker(
+                [-23.5239633, -46.7323656],
+                {
+}
+            ).addTo(map_b8f69d71cba95d98f775f1edef1d60a9);
+        
+    
+            var icon_86fba41d9af4d4fea37f81a0280951cd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a53046da6429963467af988ac53ba0f1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_be7212988c0a273aa8a3f8fe03ea6998 = $(`<div id="html_be7212988c0a273aa8a3f8fe03ea6998" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> 4º BPM/M<br>             <b>Endereço:</b> R. Passo da Pátria, 1601 - Vila Leopoldina, São Paulo - SP, 05085-000<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/RDutxriU4EBcVUDr7" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_a53046da6429963467af988ac53ba0f1.setContent(html_be7212988c0a273aa8a3f8fe03ea6998);
+            
+        
+
+        marker_4eae79ced42f7a233568ca03c8cacf95.bindPopup(popup_a53046da6429963467af988ac53ba0f1)
+        ;
+
+        
+    
+    
+            marker_4eae79ced42f7a233568ca03c8cacf95.bindTooltip(
+                `<div>
+                     4º BPM/M
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_4eae79ced42f7a233568ca03c8cacf95.setIcon(icon_86fba41d9af4d4fea37f81a0280951cd);
+            
+    
+            var marker_6a65d6f3a8d89c68ee22d5e507c22639 = L.marker(
+                [-23.5280082, -46.7304035],
+                {
+}
+            ).addTo(map_b8f69d71cba95d98f775f1edef1d60a9);
+        
+    
+            var icon_16620a6cf6c4f5be71f045a943f323f9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c31b67a9df3e597e3f94b4bf612d91bb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_dd5ac99a25aa5ea34a6669179454830c = $(`<div id="html_dd5ac99a25aa5ea34a6669179454830c" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> SESI - VILA LEOPOLDINA<br>             <b>Endereço:</b> R. Carlos Weber, 835 - Vila Leopoldina, São Paulo - SP, 05303-902<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/DwWZdGCyCriX2xti9" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_c31b67a9df3e597e3f94b4bf612d91bb.setContent(html_dd5ac99a25aa5ea34a6669179454830c);
+            
+        
+
+        marker_6a65d6f3a8d89c68ee22d5e507c22639.bindPopup(popup_c31b67a9df3e597e3f94b4bf612d91bb)
+        ;
+
+        
+    
+    
+            marker_6a65d6f3a8d89c68ee22d5e507c22639.bindTooltip(
+                `<div>
+                     SESI - VILA LEOPOLDINA
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6a65d6f3a8d89c68ee22d5e507c22639.setIcon(icon_16620a6cf6c4f5be71f045a943f323f9);
+            
+    
+            var marker_b59e7425740c646a6b88c6dff906f42a = L.marker(
+                [-23.5254412, -46.7365426],
+                {
+}
+            ).addTo(map_b8f69d71cba95d98f775f1edef1d60a9);
+        
+    
+            var icon_1b9d06fdaf5a07864fe8f78e49b45a30 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_86a405abb08c5881ca4f5ce3ce67001a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a351b1206f9024919ceb4bfc95ba5b2f = $(`<div id="html_a351b1206f9024919ceb4bfc95ba5b2f" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> FACULDADE CRUZEIRO DO SUL<br>             <b>Endereço:</b> Av. Imperatriz Leopoldina, 550 - Vila Leopoldina, São Paulo - SP, 02675-031<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/4nqPXwL18h7KGtdD8" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_86a405abb08c5881ca4f5ce3ce67001a.setContent(html_a351b1206f9024919ceb4bfc95ba5b2f);
+            
+        
+
+        marker_b59e7425740c646a6b88c6dff906f42a.bindPopup(popup_86a405abb08c5881ca4f5ce3ce67001a)
+        ;
+
+        
+    
+    
+            marker_b59e7425740c646a6b88c6dff906f42a.bindTooltip(
+                `<div>
+                     FACULDADE CRUZEIRO DO SUL
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_b59e7425740c646a6b88c6dff906f42a.setIcon(icon_1b9d06fdaf5a07864fe8f78e49b45a30);
+            
+    
+            var marker_f3a979ebe31b03d1993f5f80a137dcb7 = L.marker(
+                [-23.5246334, -46.7367674],
+                {
+}
+            ).addTo(map_b8f69d71cba95d98f775f1edef1d60a9);
+        
+    
+            var icon_d135791943147e6b9643b7ad25ebf76f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e0f5c4b52433d604e609fe8e903cf654 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6e8d1150ef6dfe8bba464a9aa32f9b1d = $(`<div id="html_6e8d1150ef6dfe8bba464a9aa32f9b1d" style="width: 100.0%; height: 100.0%;">             <b>Nome:</b> FACULDADE SÃO JUDAS<br>             <b>Endereço:</b> Av. Imperatriz Leopoldina, 112 - Vila Leopoldina, São Paulo - SP, 05305-010<br>             <b>Link Google:</b> <a href="https://maps.app.goo.gl/Q4QQCYVcfxagqeTs7" target="_blank">Abrir no Google Maps</a>             </div>`)[0];
+                popup_e0f5c4b52433d604e609fe8e903cf654.setContent(html_6e8d1150ef6dfe8bba464a9aa32f9b1d);
+            
+        
+
+        marker_f3a979ebe31b03d1993f5f80a137dcb7.bindPopup(popup_e0f5c4b52433d604e609fe8e903cf654)
+        ;
+
+        
+    
+    
+            marker_f3a979ebe31b03d1993f5f80a137dcb7.bindTooltip(
+                `<div>
+                     FACULDADE SÃO JUDAS
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f3a979ebe31b03d1993f5f80a137dcb7.setIcon(icon_d135791943147e6b9643b7ad25ebf76f);
+                window.mapaApoioInit = true;
+                setTimeout(() => L.map('map_b8f69d71cba95d98f775f1edef1d60a9').invalidateSize(), 300);
+            }
+        }
+
+        function mostrarMapa(tipo) {
+            document.getElementById('menu-principal').style.display = 'none';
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            if (tipo === 'interesse') {
+                document.getElementById('mapa-interesse').classList.add('active');
+                initMapaInteresse();
+            } else if (tipo === 'apoio') {
+                document.getElementById('mapa-apoio').classList.add('active');
+                initMapaApoio();
+            }
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+
+        function voltarMenu() {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('menu-principal').style.display = 'block';
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+    </script>
+</body>
+</html>
