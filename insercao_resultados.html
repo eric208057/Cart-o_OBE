@@ -66,16 +66,7 @@
         <h4>RONDAS</h4>
         <table class="table table-bordered" id="tabelaRondas">
           <thead><tr><th>Horário</th><th>Post/Grad</th><th>RE</th><th>Nome de Guerra</th><th>Local</th><th></th></tr></thead>
-          <tbody>
-            <tr>
-              <td><input type="text" class="form-control" name="rondaHorario"></td>
-              <td><input type="text" class="form-control" name="rondaPostGrad"></td>
-              <td><input type="text" class="form-control" name="rondaRE"></td>
-              <td><input type="text" class="form-control" name="rondaNome"></td>
-              <td><input type="text" class="form-control" name="rondaLocal"></td>
-              <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
         <button type="button" class="btn btn-secondary btn-sm" id="addRonda">Adicionar Ronda</button>
       </div>
@@ -85,16 +76,7 @@
         <h4>OCORRÊNCIAS ATENDIDAS</h4>
         <table class="table table-bordered" id="tabelaOcorrencias">
           <thead><tr><th>Quant.</th><th>Horário Inicial</th><th>Local</th><th>Natureza</th><th>Horário Final</th><th></th></tr></thead>
-          <tbody>
-            <tr>
-              <td><input type="number" class="form-control" name="ocorrenciaQuant"></td>
-              <td><input type="text" class="form-control" name="ocorrenciaInicio"></td>
-              <td><input type="text" class="form-control" name="ocorrenciaLocal"></td>
-              <td><input type="text" class="form-control" name="ocorrenciaNatureza"></td>
-              <td><input type="text" class="form-control" name="ocorrenciaFim"></td>
-              <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
         <button type="button" class="btn btn-secondary btn-sm" id="addOcorrencia">Adicionar Ocorrência</button>
       </div>
@@ -104,16 +86,7 @@
         <h4>PESSOAS ABORDADAS</h4>
         <table class="table table-bordered" id="tabelaPessoas">
           <thead><tr><th>Quant.</th><th>Horário</th><th>Local</th><th>NOME</th><th>Nº DOC (RG/CPF)</th><th></th></tr></thead>
-          <tbody>
-            <tr>
-              <td><input type="number" class="form-control" name="pessoaQuant"></td>
-              <td><input type="text" class="form-control" name="pessoaHorario"></td>
-              <td><input type="text" class="form-control" name="pessoaLocal"></td>
-              <td><input type="text" class="form-control" name="pessoaNome"></td>
-              <td><input type="text" class="form-control" name="pessoaDoc"></td>
-              <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
         <button type="button" class="btn btn-secondary btn-sm" id="addPessoa">Adicionar Pessoa</button>
       </div>
@@ -123,16 +96,7 @@
         <h4>VEÍCULOS FISCALIZADOS</h4>
         <table class="table table-bordered" id="tabelaVeiculos">
           <thead><tr><th>Quant.</th><th>Horário</th><th>Placa</th><th>Modelo</th><th>Local</th><th></th></tr></thead>
-          <tbody>
-            <tr>
-              <td><input type="number" class="form-control" name="veiculoQuant"></td>
-              <td><input type="text" class="form-control" name="veiculoHorario"></td>
-              <td><input type="text" class="form-control" name="veiculoPlaca"></td>
-              <td><input type="text" class="form-control" name="veiculoModelo"></td>
-              <td><input type="text" class="form-control" name="veiculoLocal"></td>
-              <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
         <button type="button" class="btn btn-secondary btn-sm" id="addVeiculo">Adicionar Veículo</button>
       </div>
@@ -146,148 +110,99 @@
   </div>
 
   <script>
-    // Função para adicionar linha em tabela
-    function addRow(tableId, template) {
-      document.querySelector(`#${tableId} tbody`).insertAdjacentHTML('beforeend', template);
+    let rondaIndex = 0;
+    let ocorrenciaIndex = 0;
+    let pessoaIndex = 0;
+    let veiculoIndex = 0;
+
+    // Template de linha com índice correto
+    function criarLinhaRonda(idx) {
+      return `
+        <tr>
+          <td><input type="text" class="form-control" name="ronda_horario_${idx}"></td>
+          <td><input type="text" class="form-control" name="ronda_postGrad_${idx}"></td>
+          <td><input type="text" class="form-control" name="ronda_re_${idx}"></td>
+          <td><input type="text" class="form-control" name="ronda_nome_${idx}"></td>
+          <td><input type="text" class="form-control" name="ronda_local_${idx}"></td>
+          <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
+        </tr>`;
     }
 
-    // Templates das linhas adicionais
-    const rondaTemplate = `<tr>
-      <td><input type="text" class="form-control" name="rondaHorario"></td>
-      <td><input type="text" class="form-control" name="rondaPostGrad"></td>
-      <td><input type="text" class="form-control" name="rondaRE"></td>
-      <td><input type="text" class="form-control" name="rondaNome"></td>
-      <td><input type="text" class="form-control" name="rondaLocal"></td>
-      <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
-    </tr>`;
+    function criarLinhaOcorrencia(idx) {
+      return `
+        <tr>
+          <td><input type="number" class="form-control" name="ocorrencia_quant_${idx}"></td>
+          <td><input type="text" class="form-control" name="ocorrencia_inicio_${idx}"></td>
+          <td><input type="text" class="form-control" name="ocorrencia_local_${idx}"></td>
+          <td><input type="text" class="form-control" name="ocorrencia_natureza_${idx}"></td>
+          <td><input type="text" class="form-control" name="ocorrencia_fim_${idx}"></td>
+          <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
+        </tr>`;
+    }
 
-    const ocorrenciaTemplate = `<tr>
-      <td><input type="number" class="form-control" name="ocorrenciaQuant"></td>
-      <td><input type="text" class="form-control" name="ocorrenciaInicio"></td>
-      <td><input type="text" class="form-control" name="ocorrenciaLocal"></td>
-      <td><input type="text" class="form-control" name="ocorrenciaNatureza"></td>
-      <td><input type="text" class="form-control" name="ocorrenciaFim"></td>
-      <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
-    </tr>`;
+    function criarLinhaPessoa(idx) {
+      return `
+        <tr>
+          <td><input type="number" class="form-control" name="pessoa_quant_${idx}"></td>
+          <td><input type="text" class="form-control" name="pessoa_horario_${idx}"></td>
+          <td><input type="text" class="form-control" name="pessoa_local_${idx}"></td>
+          <td><input type="text" class="form-control" name="pessoa_nome_${idx}"></td>
+          <td><input type="text" class="form-control" name="pessoa_doc_${idx}"></td>
+          <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
+        </tr>`;
+    }
 
-    const pessoaTemplate = `<tr>
-      <td><input type="number" class="form-control" name="pessoaQuant"></td>
-      <td><input type="text" class="form-control" name="pessoaHorario"></td>
-      <td><input type="text" class="form-control" name="pessoaLocal"></td>
-      <td><input type="text" class="form-control" name="pessoaNome"></td>
-      <td><input type="text" class="form-control" name="pessoaDoc"></td>
-      <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
-    </tr>`;
+    function criarLinhaVeiculo(idx) {
+      return `
+        <tr>
+          <td><input type="number" class="form-control" name="veiculo_quant_${idx}"></td>
+          <td><input type="text" class="form-control" name="veiculo_horario_${idx}"></td>
+          <td><input type="text" class="form-control" name="veiculo_placa_${idx}"></td>
+          <td><input type="text" class="form-control" name="veiculo_modelo_${idx}"></td>
+          <td><input type="text" class="form-control" name="veiculo_local_${idx}"></td>
+          <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
+        </tr>`;
+    }
 
-    const veiculoTemplate = `<tr>
-      <td><input type="number" class="form-control" name="veiculoQuant"></td>
-      <td><input type="text" class="form-control" name="veiculoHorario"></td>
-      <td><input type="text" class="form-control" name="veiculoPlaca"></td>
-      <td><input type="text" class="form-control" name="veiculoModelo"></td>
-      <td><input type="text" class="form-control" name="veiculoLocal"></td>
-      <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
-    </tr>`;
+    // Adicionar primeira linha de cada seção
+    document.querySelector('#tabelaRondas tbody').insertAdjacentHTML('beforeend', criarLinhaRonda(rondaIndex++));
+    document.querySelector('#tabelaOcorrencias tbody').insertAdjacentHTML('beforeend', criarLinhaOcorrencia(ocorrenciaIndex++));
+    document.querySelector('#tabelaPessoas tbody').insertAdjacentHTML('beforeend', criarLinhaPessoa(pessoaIndex++));
+    document.querySelector('#tabelaVeiculos tbody').insertAdjacentHTML('beforeend', criarLinhaVeiculo(veiculoIndex++));
 
-    // Botões de adicionar linha
-    document.getElementById('addRonda').addEventListener('click', () => addRow('tabelaRondas', rondaTemplate));
-    document.getElementById('addOcorrencia').addEventListener('click', () => addRow('tabelaOcorrencias', ocorrenciaTemplate));
-    document.getElementById('addPessoa').addEventListener('click', () => addRow('tabelaPessoas', pessoaTemplate));
-    document.getElementById('addVeiculo').addEventListener('click', () => addRow('tabelaVeiculos', veiculoTemplate));
+    // Botões de adicionar
+    document.getElementById('addRonda').addEventListener('click', () => {
+      document.querySelector('#tabelaRondas tbody').insertAdjacentHTML('beforeend', criarLinhaRonda(rondaIndex++));
+    });
+    document.getElementById('addOcorrencia').addEventListener('click', () => {
+      document.querySelector('#tabelaOcorrencias tbody').insertAdjacentHTML('beforeend', criarLinhaOcorrencia(ocorrenciaIndex++));
+    });
+    document.getElementById('addPessoa').addEventListener('click', () => {
+      document.querySelector('#tabelaPessoas tbody').insertAdjacentHTML('beforeend', criarLinhaPessoa(pessoaIndex++));
+    });
+    document.getElementById('addVeiculo').addEventListener('click', () => {
+      document.querySelector('#tabelaVeiculos tbody').insertAdjacentHTML('beforeend', criarLinhaVeiculo(veiculoIndex++));
+    });
 
-    // Remover linha (mantém pelo menos uma)
+    // Remover linha (mantém pelo menos uma por tabela)
     document.addEventListener('click', e => {
       if (e.target.classList.contains('remover')) {
-        const tbody = e.target.closest('tbody');
+        const tr = e.target.closest('tr');
+        const tbody = tr.parentElement;
         if (tbody.children.length > 1) {
-          e.target.closest('tr').remove();
+          tr.remove();
+        } else {
+          alert('Pelo menos uma linha deve ser mantida.');
         }
       }
     });
 
-    // Envio do formulário via JSON
-    document.getElementById('popForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const form = this;
-      const data = {};
-
-      // Campos principais
-      data.operacao = form.operacao.value.trim();
-      data.opm = form.opm.value.trim();
-      data.local = form.local.value.trim();
-      data.data = form.data.value;
-      data.turnoInicio = form.turnoInicio.value.trim();
-      data.turnoFim = form.turnoFim.value.trim();
-      data.encarregadoNome = form.encarregadoNome.value.trim();
-      data.encarregadoRE = form.encarregadoRE.value.trim();
-
-      // Função para coletar dados de uma tabela
-      function coletarTabela(prefixo, tabelaId) {
-        const linhas = document.querySelectorAll(`#${tabelaId} tbody tr`);
-        data[prefixo] = [];
-        linhas.forEach(linha => {
-          const obj = {
-            horario: linha.querySelector(`input[name*="${prefixo}Horario"]`)?.value.trim() || '',
-            // Ajuste conforme os campos de cada tabela
-          };
-
-          if (prefixo === 'rondas') {
-            obj.horario = linha.querySelector('input[name="rondaHorario"]')?.value.trim() || '';
-            obj.postGrad = linha.querySelector('input[name="rondaPostGrad"]')?.value.trim() || '';
-            obj.re = linha.querySelector('input[name="rondaRE"]')?.value.trim() || '';
-            obj.nome = linha.querySelector('input[name="rondaNome"]')?.value.trim() || '';
-            obj.local = linha.querySelector('input[name="rondaLocal"]')?.value.trim() || '';
-          } else if (prefixo === 'ocorrencias') {
-            obj.quant = linha.querySelector('input[name="ocorrenciaQuant"]')?.value.trim() || '';
-            obj.inicio = linha.querySelector('input[name="ocorrenciaInicio"]')?.value.trim() || '';
-            obj.local = linha.querySelector('input[name="ocorrenciaLocal"]')?.value.trim() || '';
-            obj.natureza = linha.querySelector('input[name="ocorrenciaNatureza"]')?.value.trim() || '';
-            obj.fim = linha.querySelector('input[name="ocorrenciaFim"]')?.value.trim() || '';
-          } else if (prefixo === 'pessoas') {
-            obj.quant = linha.querySelector('input[name="pessoaQuant"]')?.value.trim() || '';
-            obj.horario = linha.querySelector('input[name="pessoaHorario"]')?.value.trim() || '';
-            obj.local = linha.querySelector('input[name="pessoaLocal"]')?.value.trim() || '';
-            obj.nome = linha.querySelector('input[name="pessoaNome"]')?.value.trim() || '';
-            obj.doc = linha.querySelector('input[name="pessoaDoc"]')?.value.trim() || '';
-          } else if (prefixo === 'veiculos') {
-            obj.quant = linha.querySelector('input[name="veiculoQuant"]')?.value.trim() || '';
-            obj.horario = linha.querySelector('input[name="veiculoHorario"]')?.value.trim() || '';
-            obj.placa = linha.querySelector('input[name="veiculoPlaca"]')?.value.trim() || '';
-            obj.modelo = linha.querySelector('input[name="veiculoModelo"]')?.value.trim() || '';
-            obj.local = linha.querySelector('input[name="veiculoLocal"]')?.value.trim() || '';
-          }
-
-          // Só adiciona se tiver algum dado preenchido
-          if (Object.values(obj).some(v => v !== '')) {
-            data[prefixo].push(obj);
-          }
-        });
-      }
-
-      coletarTabela('rondas', 'tabelaRondas');
-      coletarTabela('ocorrencias', 'tabelaOcorrencias');
-      coletarTabela('pessoas', 'tabelaPessoas');
-      coletarTabela('veiculos', 'tabelaVeiculos');
-
-      const resultado = document.getElementById('resultado');
-
-      fetch(this.action, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.text())
-      .then(msg => {
-        resultado.innerHTML = `<div class="alert alert-success">${msg}</div>`;
-        form.reset();
-      })
-      .catch(err => {
-        resultado.innerHTML = `<div class="alert alert-danger">Erro ao enviar: ${err.message}</div>`;
-        console.error('Erro:', err);
-      });
-    });
+    // Exibir mensagem de sucesso após envio (o Apps Script retorna texto)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('success')) {
+      document.getElementById('resultado').innerHTML = 
+        `<div class="alert alert-success">Dados enviados com sucesso!</div>`;
+    }
   </script>
 </body>
 </html>
