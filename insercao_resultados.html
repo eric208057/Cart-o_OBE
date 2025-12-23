@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatório POP - Policiamento Ostensivo a Pé</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
   <style>
     body { padding: 20px; background: #f8f9fa; }
     .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    #signature-pad { border: 2px solid #000; background: #fff; width: 100%; height: 200px; border-radius: 6px; }
     table { font-size: 0.9rem; }
     th { background: #e9ecef; }
   </style>
@@ -139,16 +137,6 @@
         <button type="button" class="btn btn-secondary btn-sm" id="addVeiculo">Adicionar Veículo</button>
       </div>
 
-      <!-- ASSINATURA -->
-      <div class="section">
-        <h4>Assinatura do Encarregado</h4>
-        <canvas id="signature-pad"></canvas>
-        <div class="mt-3">
-          <button type="button" class="btn btn-outline-secondary" id="clearSignature">Limpar Assinatura</button>
-        </div>
-        <input type="hidden" name="signature" id="signatureInput">
-      </div>
-
       <div class="text-center mt-4">
         <button type="submit" class="btn btn-success btn-lg">ENVIAR RELATÓRIO</button>
       </div>
@@ -158,24 +146,12 @@
   </div>
 
   <script>
-    // Signature Pad
-    const canvas = document.getElementById('signature-pad');
-    const signaturePad = new SignaturePad(canvas, { penColor: 'black' });
-
-    function resizeCanvas() {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = 200;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    document.getElementById('clearSignature').addEventListener('click', () => signaturePad.clear());
-
-    // Adicionar linhas
+    // Função para adicionar linha em tabela
     function addRow(tableId, template) {
       document.querySelector(`#${tableId} tbody`).insertAdjacentHTML('beforeend', template);
     }
 
+    // Templates das linhas
     const rondaTemplate = `<tr>
       <td><input type="text" class="form-control" name="rondaHorario[]"></td>
       <td><input type="text" class="form-control" name="rondaPostGrad[]"></td>
@@ -185,47 +161,6 @@
       <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
     </tr>`;
 
-    // Repita para as outras tabelas (ocorrencia, pessoa, veiculo) com os nomes corretos
-
-    document.getElementById('addRonda').addEventListener('click', () => addRow('tabelaRondas', rondaTemplate));
-    // ... adicione os outros botões similarmente (código completo abaixo)
-
-    // Remover linha
-    document.addEventListener('click', e => {
-      if (e.target.classList.contains('remover')) {
-        if (e.target.closest('tbody').children.length > 1) {
-          e.target.closest('tr').remove();
-        }
-      }
-    });
-
-    // Envio do formulário
-    document.getElementById('popForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      // Captura assinatura
-      if (!signaturePad.isEmpty()) {
-        document.getElementById('signatureInput').value = signaturePad.toDataURL();
-      }
-
-      const formData = new FormData(this);
-      const resultado = document.getElementById('resultado');
-
-      fetch(this.action, { method: 'POST', body: formData })
-        .then(response => response.text())
-        .then(msg => {
-          resultado.innerHTML = `<div class="alert alert-success">${msg}</div>`;
-          this.reset();
-          signaturePad.clear();
-        })
-        .catch(err => {
-          resultado.innerHTML = `<div class="alert alert-danger">Erro ao enviar: ${err}</div>`;
-        });
-    });
-  </script>
-
-  <!-- Adicionar os outros templates e botões -->
-  <script>
     const ocorrenciaTemplate = `<tr>
       <td><input type="number" class="form-control" name="ocorrenciaQuant[]"></td>
       <td><input type="text" class="form-control" name="ocorrenciaInicio[]"></td>
@@ -253,9 +188,40 @@
       <td><button type="button" class="btn btn-danger btn-sm remover">Remover</button></td>
     </tr>`;
 
+    // Botões de adicionar
+    document.getElementById('addRonda').addEventListener('click', () => addRow('tabelaRondas', rondaTemplate));
     document.getElementById('addOcorrencia').addEventListener('click', () => addRow('tabelaOcorrencias', ocorrenciaTemplate));
     document.getElementById('addPessoa').addEventListener('click', () => addRow('tabelaPessoas', pessoaTemplate));
     document.getElementById('addVeiculo').addEventListener('click', () => addRow('tabelaVeiculos', veiculoTemplate));
+
+    // Remover linha (não permite remover a última)
+    document.addEventListener('click', e => {
+      if (e.target.classList.contains('remover')) {
+        const tbody = e.target.closest('tbody');
+        if (tbody.children.length > 1) {
+          e.target.closest('tr').remove();
+        }
+      }
+    });
+
+    // Envio do formulário
+    document.getElementById('popForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const resultado = document.getElementById('resultado');
+
+      fetch(this.action, { method: 'POST', body: formData })
+        .then(response => response.text())
+        .then(msg => {
+          resultado.innerHTML = `<div class="alert alert-success">${msg}</div>`;
+          this.reset();
+        })
+        .catch(err => {
+          resultado.innerHTML = `<div class="alert alert-danger">Erro ao enviar: ${err}</div>`;
+          console.error(err);
+        });
+    });
   </script>
 </body>
 </html>
