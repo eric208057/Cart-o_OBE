@@ -18,6 +18,7 @@
         .back-btn:hover { background:#555; }
         .folium-map { width:100%; height:80vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
         footer { text-align:center; padding:15px; background:#1a1a1a; font-size:0.8rem; color:#888; }
+        .popup-link { color: #ff4d4d; font-weight: bold; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -42,14 +43,103 @@
             maxZoom: 19
         }).addTo(map);
 
-        // === AQUI VOCÊ COLOCA TODO O CÓDIGO DOS MARKERS DO MAPA DE INTERESSE ===
-        // Exemplo de marker (substitua pelo seu código completo de markers):
-        /*
-        L.marker([-23.55052, -46.633308], {icon: redIcon}).addTo(map)
-            .bindPopup("Exemplo de Local de Interesse");
-        */
+        // Ícone vermelho (hospital/medico)
+        var redIcon = L.AwesomeMarkers.icon({
+            icon: 'medkit',
+            markerColor: 'red',
+            prefix: 'fa'
+        });
 
-        // Ajusta o tamanho do mapa após carregamento
+        // === LOCAIS DE INTERESSE COM ENDEREÇO E LINK DO GOOGLE MAPS ===
+
+        L.marker([-23.5341, -46.7342], {icon: redIcon}).addTo(map)
+            .bindPopup(`
+                <b>91º DP</b><br>
+                Av. Dr. Gastão Vidigal, 307 - Vila Leopoldina<br>
+                São Paulo - SP, 05314-001<br><br>
+                <a href="https://maps.app.goo.gl/dX4APjDgWuFg7NBw7" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        L.marker([-23.5564, -46.6702], {icon: redIcon}).addTo(map)
+            .bindPopup(`
+                <b>IML</b><br>
+                Av. Dr. Enéas Carvalho de Aguiar, 600 - Cerqueira César<br>
+                São Paulo - SP, 05403-000<br><br>
+                <a href="https://maps.app.goo.gl/1HGUcnTowkiGAvSTA" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        L.marker([-23.5680, -46.7117], {icon: redIcon}).addTo(map)
+            .bindPopup(`
+                <b>IC</b><br>
+                R. Moncorvo Filho, 410 - Butantã<br>
+                São Paulo - SP, 05507-060<br><br>
+                <a href="https://maps.app.goo.gl/PekiRBpwQ9n6FRoD8" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        L.marker([-23.5395, -46.7279], {icon: redIcon}).addTo(map)
+            .bindPopup(`
+                <b>PS Municipal - LAPA</b><br>
+                Av. Queiroz Filho, 313 - Vila Hamburguesa<br>
+                São Paulo - SP, 02675-031<br><br>
+                <a href="https://maps.app.goo.gl/UnNQU7TU6n9z9Wdq5" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        L.marker([-23.5253, -46.7158], {icon: redIcon}).addTo(map)
+            .bindPopup(`
+                <b>Hospital Albert Sabin</b><br>
+                R. Brg. Gavião Peixoto, 123 - Lapa<br>
+                São Paulo - SP, 05078-000<br><br>
+                <a href="https://maps.app.goo.gl/6e1rcEVutWSvo9uX6" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        L.marker([-23.5564, -46.6702], {icon: redIcon}).addTo(map)
+            .bindPopup(`
+                <b>Hospital das Clínicas</b><br>
+                Av. Dr. Enéas Carvalho de Aguiar, 255 - Cerqueira César<br>
+                São Paulo - SP, 05403-000<br><br>
+                <a href="https://maps.app.goo.gl/5LDUwnobYGoyBCoNA" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        // === CARREGAR OS POLÍGONOS DO GEOJSON ===
+        fetch('Btl_Estado.geojson')
+            .then(response => response.json())
+            .then(data => {
+                L.geoJSON(data, {
+                    style: {
+                        color: "#ff7800",
+                        weight: 3,
+                        opacity: 0.9,
+                        fillColor: "#ff7800",
+                        fillOpacity: 0.3
+                    },
+                    onEachFeature: function (feature, layer) {
+                        if (feature.properties) {
+                            let popupContent = "";
+                            for (let key in feature.properties) {
+                                popupContent += `<b>${key}:</b> ${feature.properties[key]}<br>`;
+                            }
+                            layer.bindPopup(popupContent);
+                        }
+                    }
+                }).addTo(map);
+
+                // Ajusta o zoom para enquadrar os polígonos
+                map.fitBounds(L.geoJSON(data).getBounds());
+            })
+            .catch(err => console.error("Erro ao carregar GeoJSON:", err));
+
         setTimeout(() => map.invalidateSize(), 300);
     </script>
 </body>

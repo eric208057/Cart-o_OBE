@@ -18,6 +18,7 @@
         .back-btn:hover { background:#555; }
         .folium-map { width:100%; height:80vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
         footer { text-align:center; padding:15px; background:#1a1a1a; font-size:0.8rem; color:#888; }
+        .popup-link { color: #4da6ff; font-weight: bold; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -32,8 +33,8 @@
 
     <script>
         var map = L.map('map_apoio', {
-            center: [-23.55052, -46.633308],  // ajuste o centro conforme necessário
-            zoom: 14,
+            center: [-23.5342, -46.7386],
+            zoom: 15,
             zoomControl: true
         });
 
@@ -42,13 +43,66 @@
             maxZoom: 19
         }).addTo(map);
 
-        // === AQUI VOCÊ COLOCA TODO O CÓDIGO DOS MARKERS DO MAPA DE APOIO ===
-        // Exemplo:
-        /*
-        L.marker([-23.535, -46.735], {icon: blueIcon}).addTo(map)
-            .bindPopup("Ponto de Apoio Exemplo");
-        */
+        // Ícone azul padrão
+        var blueIcon = L.AwesomeMarkers.icon({
+            icon: 'info-circle',
+            markerColor: 'blue',
+            prefix: 'fa'
+        });
 
+        // === PONTOS DE APOIO COM ENDEREÇO E LINK EXATO DO GOOGLE MAPS ===
+
+        L.marker([-23.5348, -46.7392], {icon: blueIcon}).addTo(map)
+            .bindPopup(`
+                <b>Igreja Universal - Vila Leopoldina</b><br>
+                R. Schilling, 512 - Vila Leopoldina<br>
+                São Paulo - SP, 05302-001<br><br>
+                <a href="https://maps.app.goo.gl/eCDZKRoYsGgRiYMo6" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        L.marker([-23.5335, -46.7340], {icon: blueIcon}).addTo(map)
+            .bindPopup(`
+                <b>4º BPM/M</b><br>
+                R. Passo da Pátria, 1601 - Vila Leopoldina<br>
+                São Paulo - SP, 05085-000<br><br>
+                <a href="https://maps.app.goo.gl/RDutxriU4EBcVUDr7" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        L.marker([-23.5310, -46.7335], {icon: blueIcon}).addTo(map)
+            .bindPopup(`
+                <b>SESI - Vila Leopoldina</b><br>
+                R. Carlos Weber, 835 - Vila Leopoldina<br>
+                São Paulo - SP, 05303-902<br><br>
+                <a href="https://maps.app.goo.gl/DwWZdGCyCriX2xti9" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        L.marker([-23.5357, -46.7432], {icon: blueIcon}).addTo(map)
+            .bindPopup(`
+                <b>Faculdade Cruzeiro do Sul</b><br>
+                Av. Imperatriz Leopoldina, 550 - Vila Leopoldina<br>
+                São Paulo - SP, 02675-031<br><br>
+                <a href="https://maps.app.goo.gl/4nqPXwL18h7KGtdD8" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        L.marker([-23.5360, -46.7430], {icon: blueIcon}).addTo(map)
+            .bindPopup(`
+                <b>Faculdade São Judas</b><br>
+                Av. Imperatriz Leopoldina, 112 - Vila Leopoldina<br>
+                São Paulo - SP, 05305-010<br><br>
+                <a href="https://maps.app.goo.gl/Q4QQCYVcfxagqeTs7" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `);
+
+        // Ajusta o tamanho do mapa após o carregamento
         setTimeout(() => map.invalidateSize(), 300);
     </script>
 </body>
