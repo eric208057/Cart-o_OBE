@@ -33,8 +33,8 @@
 
     <script>
         var map = L.map('map_interesse', {
-            center: [-23.55052, -46.633308],
-            zoom: 12,
+            center: [-23.55, -46.70],  // Centro aproximado dos pontos
+            zoom: 13,
             zoomControl: true
         });
 
@@ -50,7 +50,7 @@
             prefix: 'fa'
         });
 
-        // === LOCAIS DE INTERESSE COM ENDEREÇO E LINK DO GOOGLE MAPS ===
+        // === LOCAIS DE INTERESSE ===
 
         L.marker([-23.5341, -46.7342], {icon: redIcon}).addTo(map)
             .bindPopup(`
@@ -112,34 +112,7 @@
                 </a>
             `);
 
-        // === CARREGAR OS POLÍGONOS DO GEOJSON ===
-        fetch('Btl_Estado.geojson')
-            .then(response => response.json())
-            .then(data => {
-                L.geoJSON(data, {
-                    style: {
-                        color: "#ff7800",
-                        weight: 3,
-                        opacity: 0.9,
-                        fillColor: "#ff7800",
-                        fillOpacity: 0.3
-                    },
-                    onEachFeature: function (feature, layer) {
-                        if (feature.properties) {
-                            let popupContent = "";
-                            for (let key in feature.properties) {
-                                popupContent += `<b>${key}:</b> ${feature.properties[key]}<br>`;
-                            }
-                            layer.bindPopup(popupContent);
-                        }
-                    }
-                }).addTo(map);
-       // === LOCAIS DE INTERESSE COM ENDEREÇO E LINK DO GOOGLE MAPS ===       // === LOCAIS DE INTERESSE COM ENDEREÇO E LINK DO GOOGLE MAPS ===       // === LOCAIS DE INTERESSE COM ENDEREÇO E LINK DO GOOGLE MAPS ===
-                // Ajusta o zoom para enquadrar os polígonos
-                map.fitBounds(L.geoJSON(data).getBounds());
-            })
-            .catch(err => console.error("Erro ao carregar GeoJSON:", err));
-
+        // Ajusta o tamanho do mapa após o carregamento
         setTimeout(() => map.invalidateSize(), 300);
     </script>
 </body>
