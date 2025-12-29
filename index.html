@@ -4,14 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistema OBE</title>
-
-    <!-- Recursos ESSENCIAIS e LEVES (Apenas o necessário para Leaflet + Awesome Markers) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
-
     <style>
         body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
         header { background:#1a1a1a; padding:20px; text-align:center; }
@@ -20,14 +12,10 @@
         .logos img { max-height:100px; object-fit:contain; }
         .container { padding:20px; text-align:center; flex:1; }
         .buttons-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:20px; max-width:1000px; margin:0 auto; }
-        .btn { background:#1a1a1a; color:white; padding:30px 15px; font-size:1.4rem; font-weight:bold; text-decoration:none; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.6); border:2px solid transparent; }
+        .btn { background:#1a1a1a; color:white; padding:30px 15px; font-size:1.4rem; font-weight:bold; text-decoration:none; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.6); border:2px solid transparent; display:block; }
         .btn:hover { transform:translateY(-5px); }
         .btn:nth-child(1){border-color:#8B0000;} .btn:nth-child(2){border-color:#003366;} .btn:nth-child(3){border-color:#4A4A4A;}
         .btn:nth-child(4){border-color:#8B0000;} .btn:nth-child(5){border-color:#003366;} .btn:nth-child(6){border-color:#4A4A4A;}
-        .content-section { display:none; flex:1; padding:10px; }
-        .content-section.active { display:block; }
-        .back-btn { display:inline-block; margin:15px 0; padding:10px 20px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
-        .folium-map { width:100%; height:80vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
         footer { text-align:center; padding:15px; background:#1a1a1a; font-size:0.8rem; color:#888; }
     </style>
 </head>
@@ -40,96 +28,17 @@
         <img src="pmesp.png" alt="PMESP">
     </div>
 
-    <div id="menu-principal" class="container">
+    <div class="container">
         <div class="buttons-grid">
             <a href="#" class="btn">Mapa Força</a>
-            <a href="#" onclick="mostrarMapa('interesse'); return false;" class="btn">Locais de Interesse</a>
-            <a href="#" onclick="mostrarMapa('apoio'); return false;" class="btn">Pontos de Apoio</a>
+            <a href="mapa_locais_interesse.html" class="btn">Locais de Interesse</a>
+            <a href="mapa_pontos_apoio.html" class="btn">Pontos de Apoio</a>
             <a href="#" class="btn">POP's</a>
             <a href="#" class="btn">RSO</a>
             <a href="insercao_resultados.html" class="btn">Inserção de Resultados</a>
         </div>
     </div>
 
-    <div id="mapa-interesse" class="content-section">
-        <a href="#" onclick="voltarMenu(); return false;" class="back-btn">← Voltar</a>
-        <h2 style="text-align:center;">Locais de Interesse - SP</h2>
-        <div class="folium-map" id="map_20c9ff3f7b1a0ed740f4a41d4fb7a08a" style="width:100%; height:80vh;"></div>
-    </div>
-
-    <div id="mapa-apoio" class="content-section">
-        <a href="#" onclick="voltarMenu(); return false;" class="back-btn">← Voltar</a>
-        <h2 style="text-align:center;">Pontos de Apoio - Vila Leopoldina</h2>
-        <div class="folium-map" id="map_b8f69d71cba95d98f775f1edef1d60a9" style="width:100%; height:80vh;"></div>
-    </div>
-
     <footer>Sistema de Informação OBE • 2025</footer>
-
-    <script>
-        // Scripts dos mapas (executados só quando necessário)
-        function initMapaInteresse() {
-            if (!window.mapaInteresseInit) {
-                var map_20c9ff3f7b1a0ed740f4a41d4fb7a08a = L.map(
-                "map_20c9ff3f7b1a0ed740f4a41d4fb7a08a",
-                {
-                    center: [-23.55052, -46.633308],
-                    crs: L.CRS.EPSG3857,
-                    zoom: 12,
-                    zoomControl: true,
-                    preferCanvas: false,
-                }
-            );
-
-            var tile_layer_eeab2e38e7c7da1c2e5ce17f84cf3d6f = L.tileLayer(
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {
-                    minZoom: 0,
-                    maxZoom: 19,
-                    maxNativeZoom: 19,
-                    noWrap: false,
-                    attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
-                    subdomains: "abc",
-                    detectRetina: false,
-                    tms: false,
-                    opacity: 1,
-                }
-            );
-            tile_layer_eeab2e38e7c7da1c2e5ce17f84cf3d6f.addTo(map_20c9ff3f7b1a0ed740f4a41d4fb7a08a);
-
-            // ... (o restante do código dos markers para o mapa de interesse permanece inalterado)
-
-                window.mapaInteresseInit = true;
-                setTimeout(() => L.map('map_20c9ff3f7b1a0ed740f4a41d4fb7a08a').invalidateSize(), 300);
-            }
-        }
-
-        function initMapaApoio() {
-            if (!window.mapaApoioInit) {
-                // ... (o código do mapa de apoio permanece inalterado)
-
-                window.mapaApoioInit = true;
-                setTimeout(() => L.map('map_b8f69d71cba95d98f775f1edef1d60a9').invalidateSize(), 300);
-            }
-        }
-
-        function mostrarMapa(tipo) {
-            document.getElementById('menu-principal').style.display = 'none';
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            if (tipo === 'interesse') {
-                document.getElementById('mapa-interesse').classList.add('active');
-                initMapaInteresse();
-            } else if (tipo === 'apoio') {
-                document.getElementById('mapa-apoio').classList.add('active');
-                initMapaApoio();
-            }
-            window.scrollTo({top:0, behavior:'smooth'});
-        }
-
-        function voltarMenu() {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('menu-principal').style.display = 'block';
-            window.scrollTo({top:0, behavior:'smooth'});
-        }
-    </script>
 </body>
 </html>

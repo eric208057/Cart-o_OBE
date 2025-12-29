@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pontos de Apoio - Sistema OBE</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+
+    <style>
+        body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+        header { background:#1a1a1a; padding:20px; text-align:center; }
+        h1 { margin:0; font-size:2rem; }
+        .back-btn { display:inline-block; margin:20px; padding:12px 24px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
+        .back-btn:hover { background:#555; }
+        .folium-map { width:100%; height:80vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        footer { text-align:center; padding:15px; background:#1a1a1a; font-size:0.8rem; color:#888; }
+    </style>
+</head>
+<body>
+
+    <header><h1>Pontos de Apoio - Vila Leopoldina</h1></header>
+
+    <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+
+    <div class="folium-map" id="map_apoio"></div>
+
+    <footer>Sistema de Informação OBE • 2025</footer>
+
+    <script>
+        var map = L.map('map_apoio', {
+            center: [-23.55052, -46.633308],  // ajuste o centro conforme necessário
+            zoom: 14,
+            zoomControl: true
+        });
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // === AQUI VOCÊ COLOCA TODO O CÓDIGO DOS MARKERS DO MAPA DE APOIO ===
+        // Exemplo:
+        /*
+        L.marker([-23.535, -46.735], {icon: blueIcon}).addTo(map)
+            .bindPopup("Ponto de Apoio Exemplo");
+        */
+
+        setTimeout(() => map.invalidateSize(), 300);
+    </script>
+</body>
+</html>
