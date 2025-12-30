@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>POP's - Sistema OBE</title>
+    <style>
+        body { 
+            margin:0; 
+            padding:0; 
+            font-family:Arial, sans-serif; 
+            background:#000; 
+            color:#fff; 
+            min-height:100vh; 
+            display:flex; 
+            flex-direction:column; 
+        }
+        header { 
+            background:#1a1a1a; 
+            padding:20px; 
+            text-align:center; 
+            border-bottom:2px solid #333; 
+            position: relative;
+        }
+        h1 { 
+            margin:0; 
+            font-size:2.4rem; 
+        }
+        .back-btn { 
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            z-index: 10;
+        }
+        .back-btn:hover { 
+            background: #555; 
+        }
+        .container { 
+            padding: 20px; 
+            text-align: center; 
+            flex: 1; 
+        }
+        .buttons-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            max-width: 1000px; 
+            margin: 0 auto 30px auto; 
+        }
+        .btn { 
+            background: #1a1a1a; 
+            color: white; 
+            padding: 25px 15px; 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+            text-decoration: none; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6); 
+            border: 2px solid #8B0000; 
+            display: block; 
+            cursor: pointer;
+        }
+        .btn:hover { 
+            transform: translateY(-5px); 
+        }
+        #pdf-viewer {
+            width: 100%;
+            height: 70vh;           /* Ajuste a altura conforme necessário */
+            border: 2px solid #444;
+            border-radius: 8px;
+            background: #111;
+            display: none;          /* Escondido até clicar em um botão */
+            margin: 0 auto;
+        }
+        #pdf-viewer.active {
+            display: block;
+        }
+        footer { 
+            text-align: center; 
+            padding: 15px; 
+            background: #1a1a1a; 
+            font-size: 0.8rem; 
+            color: #888; 
+            margin-top: auto; 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+        <h1>Procedimentos Operacionais Padrão (POP's)</h1>
+    </header>
+
+    <div class="container">
+
+        <div class="buttons-grid">
+            <button class="btn" onclick="showPDF('https://drive.google.com/file/d/1hEknOxIyo3VHk3YpyI6Gm_3Qa6NmkGwO/preview')">POP 5.03.00 - Uso de Algemas</button>
+            <button class="btn" onclick="showPDF('https://drive.google.com/file/d/10jtBBsFzYwIYa0UTcCa-AKRsAdZpa4gm/preview')">POP 5.21.00 - Uso de Arma de Incapacitação Neuromuscular</button>
+            <button class="btn" onclick="showPDF('https://drive.google.com/file/d/1yGX9U2z_8Fa-s8xATTFjfVcx_8Vjz4D6/preview')">POP 1.05.00 - Vistoria em Veículo</button>
+            <button class="btn" onclick="showPDF('https://drive.google.com/file/d/1n9pWxBJuzZh1lQJZ0hI8mccjtGjsAIFS/preview')">POP 1.02.00 - Abordagem Policial com Viatura 4 Rodas</button>
+            <button class="btn" onclick="showPDF('https://drive.google.com/file/d/1TDuuanpafUlf0BdDK_iCaMe17_zTyGre/preview')">POP 1.01.00 - Abordagem de Pessoas a Pé</button>
+        </div>
+
+        <iframe id="pdf-viewer" allowfullscreen></iframe>
+
+    </div>
+
+    <footer>Sistema de Informação OBE • 2025</footer>
+
+    <script>
+        function showPDF(url) {
+            const viewer = document.getElementById('pdf-viewer');
+            viewer.src = url;
+            viewer.classList.add('active');
+            viewer.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>

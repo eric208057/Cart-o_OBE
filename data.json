@@ -1,0 +1,62 @@
+{
+  "15h00": {
+    "label": "15:00 - 16:15 (POP)",
+    "percurso": true,
+    "pontos": [
+      {
+        "lat": -23.534164,
+        "lng": -46.7352702,
+        "nome": "POP - Início Av. Gastão Vidigal",
+        "endereco": "Av. Dr. Gastão Vidigal"
+      },
+      {
+        "lat": -23.5365104,
+        "lng": -46.7291954,
+        "nome": "POP - R. Dr. Avelino Chaves (sentido centro)",
+        "endereco": "R. Dr. Avelino Chaves"
+      }
+    ]
+  },
+  "16h30": {
+    "label": "16:30 - 17:30 (BLOQUEIO)",
+    "percurso": false,
+    "pontos": [
+      {
+        "lat": -23.534164,
+        "lng": -46.7352702,
+        "nome": "BLOQUEIO - Av. Gastão Vidigal alt. 1.140",
+        "endereco": "Av. Dr. Gastão Vidigal, altura 1.140"
+      }
+    ]
+  },
+  "15h30": {
+    "label": "15:30 - 16:00 (REFEIÇÃO)",
+    "percurso": false,
+    "pontos": [
+      {
+        "lat": -23.531873,
+        "lng": -46.726982,
+        "nome": "REFEIÇÃO - R. Imperatriz Leopoldina",
+        "endereco": "R. Imperatriz Leopoldina, 550"
+      }
+    ]
+  },
+  "17h15": {
+    "label": "17:15 - 20:30 (POP)",
+    "percurso": true,
+    "pontos": [
+      {
+        "lat": -23.534980,
+        "lng": -46.736780,
+        "nome": "POP - Av. Gastão Vidigal (sentido bairro)",
+        "endereco": "Av. Gastão Vidigal"
+      },
+      {
+        "lat": -23.536120,
+        "lng": -46.734260,
+        "nome": "POP - Trecho final sentido bairro",
+        "endereco": "Próximo R. Dr. Avelino Chaves (sentido bairro)"
+      }
+    ]
+  }
+}

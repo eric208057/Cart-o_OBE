@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VTR-3 - Pontos da Patrulha - SP</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+
+    <style>
+        body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+        header { background:#1a1a1a; padding:20px; text-align:center; }
+        h1 { margin:0; font-size:2.1rem; }
+        .back-btn { display:inline-block; margin:15px 20px; padding:12px 24px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
+        .back-btn:hover { background:#555; }
+        .folium-map { width:100%; height:calc(100vh - 320px); border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        footer { text-align:center; padding:12px; background:#1a1a1a; font-size:0.8rem; color:#888; }
+        .popup-link { color: #ff4d4d; font-weight: bold; text-decoration: underline; }
+        .control-panel { background:#1a1a1a; padding:12px; text-align:center; }
+        .time-btn { margin:6px; padding:10px 16px; background:#333; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; transition: all 0.2s; font-size:0.9rem; }
+        .time-btn:hover { background:#555; }
+        .time-btn.active { background:#0066cc; }
+        .legend { margin:10px auto; max-width:600px; font-size:0.9rem; color:#ccc; text-align:center; }
+        .legend span { margin:0 12px; }
+        .legend .patrulhamento { color:#66ccff; }
+        .legend .estacionamento { color:#4da6ff; }
+        .legend .refeicao { color:#66cc66; }
+    </style>
+</head>
+<body>
+
+    <header><h1>VTR-3 - Pontos da Patrulha - SP</h1></header>
+
+    <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+
+    <div class="control-panel">
+        <button class="time-btn" data-time="14h00" title="14:00 – 14:40">14:00 - 14:40 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="14h40" title="14:40 – 15:00">14:40 - 15:00 (PONTO ESTAC.)</button>
+        <button class="time-btn" data-time="15h00" title="15:00 – 15:40">15:00 - 15:40 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="15h40" title="15:40 – 16:00">15:40 - 16:00 (PONTO ESTAC.)</button>
+        <button class="time-btn" data-time="16h00" title="16:00 – 16:40">16:00 - 16:40 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="16h40" title="16:40 – 17:00">16:40 - 17:00 (PONTO ESTAC.)</button>
+        <button class="time-btn" data-time="17h15" title="17:15 – 18:00">17:15 - 18:00 (REFEIÇÃO)</button>
+        <button class="time-btn" data-time="18h00" title="18:00 – 18:20">18:00 - 18:20 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="18h20" title="18:20 – 19:00">18:20 - 19:00 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="19h00" title="19:00 – 19:20">19:00 - 19:20 (PONTO ESTAC.)</button>
+        <button class="time-btn" data-time="19h20" title="19:20 – 20:00">19:20 - 20:00 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="20h00" title="20:00 – 20:20">20:00 - 20:20 (PONTO ESTAC.)</button>
+        <button class="time-btn" data-time="todos">Todos os Pontos</button>
+
+        <div class="legend">
+            <span class="patrulhamento">── PATRULHAMENTO</span>
+            <span class="estacionamento">● PONTO ESTACIONAMENTO</span>
+            <span class="refeicao">● REFEIÇÃO</span>
+        </div>
+    </div>
+
+    <div class="folium-map" id="map_vtr3"></div>
+
+    <footer>Sistema de Informação OBE • VTR-3 • 2025</footer>
+
+    <script>
+        var map = L.map('map_vtr3', {
+            center: [-23.531, -46.720],
+            zoom: 15,
+            zoomControl: true
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Ícones
+        const icons = {
+            'PATRULHAMENTO': L.AwesomeMarkers.icon({ icon: 'car', markerColor: 'lightblue', prefix: 'fa', iconColor: 'white' }),
+            'PONTO ESTACIONAMENTO': L.AwesomeMarkers.icon({ icon: 'car', markerColor: 'blue', prefix: 'fa', iconColor: 'white' }),
+            'REFEIÇÃO': L.AwesomeMarkers.icon({ icon: 'cutlery', markerColor: 'green', prefix: 'fa', iconColor: 'white' })
+        };
+
+        var currentMarkers = L.layerGroup().addTo(map);
+        var currentPolylines = [];
+
+        // Coordenadas aproximadas baseadas nos endereços (região Perdizes / Água Branca / Vila Leopoldina)
+        var horarios = {
+            "14h00": { // 14:00–14:40 PATRULHAMENTO R. Monte Pascal, R. Laurindo de Brito, Av. Raimundo Pereira de Magalhães, R. Caiapós e Av. Raimundo Pereira de Magalhães
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.529, lng: -46.718, nome: "Início R. Monte Pascal", endereco: "R. Monte Pascal"},
+                    {lat: -23.530, lng: -46.719, nome: "R. Laurindo de Brito", endereco: "R. Laurindo de Brito"},
+                    {lat: -23.532, lng: -46.721, nome: "Av. Raimundo Pereira de Magalhães", endereco: "Av. Raimundo Pereira de Magalhães"},
+                    {lat: -23.531, lng: -46.722, nome: "R. Caiapós", endereco: "R. Caiapós"}
+                ],
+                percurso: true
+            },
+            "14h40": { // 14:40–15:00 PONTO ESTAC. Av. Raimundo Pereira de Magalhães alt 300
+                tipo: "PONTO ESTACIONAMENTO",
+                pontos: [
+                    {lat: -23.532, lng: -46.721, nome: "Ponto Estacionamento", endereco: "Av. Raimundo Pereira de Magalhães alt. 300"}
+                ],
+                percurso: false
+            },
+            "15h00": { // 15:00–15:40 PATRULHAMENTO Av. Raimundo Pereira de Magalhães, R. Fortunato Ferraz e Av. Raimundo Pereira de Magalhães
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.532, lng: -46.721, nome: "Av. Raimundo Pereira de Magalhães", endereco: "Av. Raimundo Pereira de Magalhães"},
+                    {lat: -23.534, lng: -46.720, nome: "R. Fortunato Ferraz", endereco: "R. Fortunato Ferraz"}
+                ],
+                percurso: true
+            },
+            "15h40": { // 15:40–16:00 PONTO ESTAC. R. Monte Pascal alt 210 sentido Centro
+                tipo: "PONTO ESTACIONAMENTO",
+                pontos: [
+                    {lat: -23.529, lng: -46.718, nome: "Ponto Estacionamento", endereco: "R. Monte Pascal alt. 210 - sentido Centro"}
+                ],
+                percurso: false
+            },
+            "16h00": { // 16:00–16:40 PATRULHAMENTO R. Fortunato Ferraz, Av. Raimundo Pereira de Magalhães, R. Laurino de Brito, R. Tordesilhas, R. Barão de Itaúna e R. Monte Pascal
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.534, lng: -46.720, nome: "R. Fortunato Ferraz", endereco: "R. Fortunato Ferraz"},
+                    {lat: -23.532, lng: -46.721, nome: "Av. Raimundo Pereira de Magalhães", endereco: "Av. Raimundo Pereira de Magalhães"},
+                    {lat: -23.530, lng: -46.719, nome: "R. Laurino de Brito", endereco: "R. Laurino de Brito"},
+                    {lat: -23.528, lng: -46.715, nome: "R. Tordesilhas / Barão de Itaúna", endereco: "R. Tordesilhas / R. Barão de Itaúna"},
+                    {lat: -23.529, lng: -46.718, nome: "R. Monte Pascal", endereco: "R. Monte Pascal"}
+                ],
+                percurso: true
+            },
+            "16h40": { // 16:40–17:00 PONTO ESTAC. Av. Raimundo Pereira de Magalhães alt 300
+                tipo: "PONTO ESTACIONAMENTO",
+                pontos: [
+                    {lat: -23.532, lng: -46.721, nome: "Ponto Estacionamento", endereco: "Av. Raimundo Pereira de Magalhães alt. 300"}
+                ],
+                percurso: false
+            },
+            "17h15": { // 17:15–18:00 REFEIÇÃO R. Passo da Pátria n. 1601
+                tipo: "REFEIÇÃO",
+                pontos: [
+                    {lat: -23.528, lng: -46.725, nome: "REFEIÇÃO - R. Passo da Pátria 1601", endereco: "R. Passo da Pátria, 1601"}
+                ],
+                percurso: false
+            },
+            "18h00": { // 18:00–18:20 PATRULHAMENTO R. Monte Pascal, R. Laurindo de Brito, Av. Raimundo Pereira de Magalhães, R. Caiapós e Av. Raimundo Pereira de Magalhães
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.529, lng: -46.718, nome: "R. Monte Pascal", endereco: "R. Monte Pascal"},
+                    {lat: -23.530, lng: -46.719, nome: "R. Laurindo de Brito", endereco: "R. Laurindo de Brito"},
+                    {lat: -23.532, lng: -46.721, nome: "Av. Raimundo Pereira de Magalhães", endereco: "Av. Raimundo Pereira de Magalhães"},
+                    {lat: -23.531, lng: -46.722, nome: "R. Caiapós", endereco: "R. Caiapós"}
+                ],
+                percurso: true
+            },
+            "18h20": { // 18:20–19:00 PATRULHAMENTO R. Monte Pascal, R. Laurindo de Brito, Av. Raimundo Pereira de Magalhães, R. Caiapós e Av. Raimundo Pereira de Magalhães
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.529, lng: -46.718, nome: "R. Monte Pascal", endereco: "R. Monte Pascal"},
+                    {lat: -23.530, lng: -46.719, nome: "R. Laurindo de Brito", endereco: "R. Laurindo de Brito"},
+                    {lat: -23.532, lng: -46.721, nome: "Av. Raimundo Pereira de Magalhães", endereco: "Av. Raimundo Pereira de Magalhães"},
+                    {lat: -23.531, lng: -46.722, nome: "R. Caiapós", endereco: "R. Caiapós"}
+                ],
+                percurso: true
+            },
+            "19h00": { // 19:00–19:20 PONTO ESTAC. R. Monte Pascal alt 210 sentido Centro
+                tipo: "PONTO ESTACIONAMENTO",
+                pontos: [
+                    {lat: -23.529, lng: -46.718, nome: "Ponto Estacionamento", endereco: "R. Monte Pascal alt. 210 - sentido Centro"}
+                ],
+                percurso: false
+            },
+            "19h20": { // 19:20–20:00 PATRULHAMENTO Av. Raimundo Pereira de Magalhães, R. Fortunato Ferraz, Av. Embaixador Macedo Soares e Av. Raimundo Pereira de Magalhães
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.532, lng: -46.721, nome: "Av. Raimundo Pereira de Magalhães", endereco: "Av. Raimundo Pereira de Magalhães"},
+                    {lat: -23.534, lng: -46.720, nome: "R. Fortunato Ferraz", endereco: "R. Fortunato Ferraz"},
+                    {lat: -23.537, lng: -46.718, nome: "Av. Embaixador Macedo Soares", endereco: "Av. Embaixador Macedo Soares"}
+                ],
+                percurso: true
+            },
+            "20h00": { // 20:00–20:20 PONTO ESTAC. R. Monte Pascal alt 210 sentido Bairro
+                tipo: "PONTO ESTACIONAMENTO",
+                pontos: [
+                    {lat: -23.529, lng: -46.718, nome: "Ponto Estacionamento", endereco: "R. Monte Pascal alt. 210 - sentido Bairro"}
+                ],
+                percurso: false
+            }
+        };
+
+        function showPoints(time) {
+            currentMarkers.clearLayers();
+            currentPolylines.forEach(pl => map.removeLayer(pl));
+            currentPolylines = [];
+
+            let config;
+            if (time === 'todos') {
+                config = {
+                    tipo: null,
+                    pontos: Object.values(horarios).flatMap(h => h.pontos.map(p => ({...p, tipo: h.tipo}))),
+                    percurso: false
+                };
+            } else {
+                config = horarios[time];
+                if (!config) return;
+            }
+
+            config.pontos.forEach(function(p) {
+                const tipo = p.tipo || config.tipo;
+                const icon = icons[tipo] || icons['PONTO ESTACIONAMENTO'];
+                L.marker([p.lat, p.lng], {icon: icon}).addTo(currentMarkers)
+                    .bindPopup(`
+                        <b>${p.nome}</b><br>
+                        ${p.endereco}<br><br>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}" target="_blank" rel="noopener" class="popup-link">
+                            Abrir no Google Maps →
+                        </a>
+                    `);
+            });
+
+            if (config.percurso && config.pontos.length > 1 && config.tipo === "PATRULHAMENTO") {
+                var coords = config.pontos.map(p => [p.lat, p.lng]);
+                var poly = L.polyline(coords, {
+                    color: '#66ccff',
+                    weight: 4,
+                    opacity: 0.8,
+                    dashArray: '10, 15'
+                }).addTo(map);
+                currentPolylines.push(poly);
+            }
+
+            if (config.pontos.length > 0) {
+                var group = L.featureGroup(currentMarkers.getLayers());
+                currentPolylines.forEach(pl => group.addLayer(pl));
+                map.fitBounds(group.getBounds().pad(0.3), { animate: true });
+            }
+        }
+
+        const buttons = document.querySelectorAll('.time-btn');
+        function activateButton(time) {
+            buttons.forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.time-btn[data-time="${time}"]`);
+            if (btn) btn.classList.add('active');
+            showPoints(time);
+        }
+
+        function autoSelectByTime() {
+            const now = new Date();
+            const mins = now.getHours() * 60 + now.getMinutes();
+            const times = {
+                '14h00': 14*60 + 0,
+                '14h40': 14*60 + 40,
+                '15h00': 15*60 + 0,
+                '15h40': 15*60 + 40,
+                '16h00': 16*60 + 0,
+                '16h40': 16*60 + 40,
+                '17h15': 17*60 + 15,
+                '18h00': 18*60 + 0,
+                '18h20': 18*60 + 20,
+                '19h00': 19*60 + 0,
+                '19h20': 19*60 + 20,
+                '20h00': 20*60 + 0
+            };
+            let closest = 'todos', minDiff = Infinity;
+            for (const [k, t] of Object.entries(times)) {
+                const diff = Math.abs(mins - t);
+                if (diff < minDiff) { minDiff = diff; closest = k; }
+            }
+            activateButton(closest);
+        }
+
+        buttons.forEach(btn => btn.addEventListener('click', () => activateButton(btn.dataset.time)));
+
+        autoSelectByTime();
+        setTimeout(() => map.invalidateSize(), 400);
+        window.addEventListener('resize', () => setTimeout(() => map.invalidateSize(), 200));
+    </script>
+</body>
+</html>

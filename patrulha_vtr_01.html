@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VTR-1 - Pontos da Patrulha - SP</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+
+    <style>
+        body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+        header { background:#1a1a1a; padding:20px; text-align:center; }
+        h1 { margin:0; font-size:2.1rem; }
+        .back-btn { display:inline-block; margin:15px 20px; padding:12px 24px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
+        .back-btn:hover { background:#555; }
+        .folium-map { width:100%; height:calc(100vh - 280px); border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        footer { text-align:center; padding:12px; background:#1a1a1a; font-size:0.8rem; color:#888; }
+        .popup-link { color: #ff4d4d; font-weight: bold; text-decoration: underline; }
+        .control-panel { background:#1a1a1a; padding:12px; text-align:center; }
+        .time-btn { margin:6px; padding:10px 18px; background:#333; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; transition: all 0.2s; }
+        .time-btn:hover { background:#555; }
+        .time-btn.active { background:#0066cc; }
+        .legend { margin:10px auto; max-width:500px; font-size:0.9rem; color:#ccc; }
+        .legend span { margin:0 12px; }
+        .legend .patrulhamento { color:#66ccff; }
+        .legend .estacionamento { color:#4da6ff; }
+        .legend .refeicao { color:#66cc66; }
+        .legend .bloqueio { color:#ff4d4d; }
+    </style>
+</head>
+<body>
+
+    <header><h1>VTR-1 - Pontos da Patrulha - SP</h1></header>
+
+    <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+
+    <div class="control-panel">
+        <button class="time-btn" data-time="14h00" title="14:00 – 14:40">14:00 - 14:40 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="14h40" title="14:40 – 15:00">14:40 - 15:00 (PONTO ESTACIONAMENTO)</button>
+        <button class="time-btn" data-time="15h00" title="15:00 – 15:30">15:00 - 15:30 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="15h30" title="15:30 – 16:15">15:30 - 16:15 (REFEIÇÃO)</button>
+        <button class="time-btn" data-time="16h30" title="16:30 – 17:30">16:30 - 17:30 (OP BLOQUEIO)</button>
+        <button class="time-btn" data-time="17h30" title="17:30 – 18:00">17:30 - 18:00 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="18h00" title="18:00 – 18:20">18:00 - 18:20 (PONTO ESTACIONAMENTO)</button>
+        <button class="time-btn" data-time="18h20" title="18:20 – 19:00">18:20 - 19:00 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="19h00" title="19:00 – 19:20">19:00 - 19:20 (PONTO ESTACIONAMENTO)</button>
+        <button class="time-btn" data-time="19h20" title="19:20 – 20:00">19:20 - 20:00 (PATRULHAMENTO)</button>
+        <button class="time-btn" data-time="20h00" title="20:00 – 20:20">20:00 - 20:20 (PONTO ESTACIONAMENTO)</button>
+        <button class="time-btn" data-time="todos">Todos os Pontos</button>
+
+        <div class="legend">
+            <span class="patrulhamento">── PATRULHAMENTO</span>
+            <span class="estacionamento">● PONTO ESTACIONAMENTO</span>
+            <span class="refeicao">● REFEIÇÃO</span>
+            <span class="bloqueio">● OP BLOQUEIO</span>
+        </div>
+    </div>
+
+    <div class="folium-map" id="map_vtr1"></div>
+
+    <footer>Sistema de Informação OBE • VTR-1 • 2025</footer>
+
+    <script>
+        var map = L.map('map_vtr1', {
+            center: [-23.5315, -46.730],
+            zoom: 15,
+            zoomControl: true
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Ícones
+        const icons = {
+            'PATRULHAMENTO': L.AwesomeMarkers.icon({ icon: 'car', markerColor: 'lightblue', prefix: 'fa', iconColor: 'white' }),
+            'PONTO ESTACIONAMENTO': L.AwesomeMarkers.icon({ icon: 'car', markerColor: 'blue', prefix: 'fa', iconColor: 'white' }),
+            'REFEIÇÃO': L.AwesomeMarkers.icon({ icon: 'cutlery', markerColor: 'green', prefix: 'fa', iconColor: 'white' }),
+            'OP BLOQUEIO': L.AwesomeMarkers.icon({ icon: 'ban', markerColor: 'red', prefix: 'fa', iconColor: 'white' })
+        };
+
+        var currentMarkers = L.layerGroup().addTo(map);
+        var currentPolylines = []; // Para múltiplas linhas de patrulhamento
+
+        // Dados aproximados baseados nos endereços
+        var horarios = {
+            "14h00": { // 14:00–14:40 PATRULHAMENTO Av. Gastão Vidigal, Marginal Pinheiros, Av. Queiroz Filho sentido centro
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.536, lng: -46.733, nome: "Início Av. Gastão Vidigal", endereco: "Av. Gastão Vidigal (altura 1140)"},
+                    {lat: -23.532, lng: -46.735, nome: "Marginal Pinheiros proximidades", endereco: "Marginal Pinheiros × Gastão Vidigal"},
+                    {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Av. Queiroz Filho sentido centro"}
+                ],
+                percurso: true
+            },
+            "14h40": { // 14:40–15:00 PONTO ESTACIONAMENTO Av. Queiroz Filho frente Parque Villa-Lobos sentido centro
+                tipo: "PONTO ESTACIONAMENTO",
+                pontos: [
+                    {lat: -23.530, lng: -46.727, nome: "Ponto Estacionamento Av. Queiroz Filho", endereco: "Frente ao Parque Villa-Lobos, sentido centro"}
+                ],
+                percurso: false
+            },
+            "15h00": { // 15:00–15:30 PATRULHAMENTO Av. Gastão Vidigal, Av. Imperatriz Leopoldina, Av. Queiroz Filho sentido centro
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.534, lng: -46.734, nome: "Av. Gastão Vidigal", endereco: "Av. Gastão Vidigal sentido centro"},
+                    {lat: -23.531, lng: -46.729, nome: "Av. Imperatriz Leopoldina", endereco: "Av. Imperatriz Leopoldina"},
+                    {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Av. Queiroz Filho sentido centro"}
+                ],
+                percurso: true
+            },
+            "15h30": { // 15:30–16:15 REFEIÇÃO Rua Schilling n.512
+                tipo: "REFEIÇÃO",
+                pontos: [
+                    {lat: -23.5315, lng: -46.7285, nome: "REFEIÇÃO - Rua Schilling 512", endereco: "Rua Schilling, 512 - Igreja Universal"}
+                ],
+                percurso: false
+            },
+            "16h30": { // 16:30–17:30 OP BLOQUEIO Av. Gastão Vidigal altura 1142
+                tipo: "OP BLOQUEIO",
+                pontos: [
+                    {lat: -23.536, lng: -46.733, nome: "BLOQUEIO Av. Gastão Vidigal", endereco: "Altura do numeral 1142"}
+                ],
+                percurso: false
+            },
+            "17h30": { // 17:30–18:00 PATRULHAMENTO Av. Gastão Vidigal, Marginal Pinheiros, Av. Queiroz Filho sentido bairro
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.536, lng: -46.733, nome: "Av. Gastão Vidigal", endereco: "Av. Gastão Vidigal sentido bairro"},
+                    {lat: -23.532, lng: -46.735, nome: "Marginal Pinheiros", endereco: "Marginal Pinheiros proximidades"},
+                    {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Av. Queiroz Filho sentido bairro"}
+                ],
+                percurso: true
+            },
+            "18h00": { // 18:00–18:20 PONTO ESTACIONAMENTO Av. Queiroz Filho sentido bairro
+                tipo: "PONTO ESTACIONAMENTO",
+                pontos: [
+                    {lat: -23.530, lng: -46.727, nome: "Ponto Estacionamento Av. Queiroz Filho", endereco: "Sentido bairro"}
+                ],
+                percurso: false
+            },
+            "18h20": { // 18:20–19:00 PATRULHAMENTO Av. Gastão Vidigal, Av. Imperatriz Leopoldina, Av. Queiroz Filho sentido bairro
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.534, lng: -46.734, nome: "Av. Gastão Vidigal", endereco: "Av. Gastão Vidigal sentido bairro"},
+                    {lat: -23.531, lng: -46.729, nome: "Av. Imperatriz Leopoldina", endereco: "Av. Imperatriz Leopoldina"},
+                    {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Av. Queiroz Filho sentido bairro"}
+                ],
+                percurso: true
+            },
+            "19h00": { // 19:00–19:20 PONTO ESTACIONAMENTO Av. Queiroz Filho sentido centro
+                tipo: "PONTO ESTACIONAMENTO",
+                pontos: [
+                    {lat: -23.530, lng: -46.727, nome: "Ponto Estacionamento Av. Queiroz Filho", endereco: "Sentido centro"}
+                ],
+                percurso: false
+            },
+            "19h20": { // 19:20–20:00 PATRULHAMENTO Av. Queiroz Filho frente Parque Villa-Lobos sentido bairro
+                tipo: "PATRULHAMENTO",
+                pontos: [
+                    {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Frente ao Parque Villa-Lobos sentido bairro"}
+                ],
+                percurso: true // Apenas um ponto, mas mantém para consistência
+            },
+            "20h00": { // 20:00–20:20 PONTO ESTACIONAMENTO Av. Gastão Vidigal sentido bairro
+                tipo: "PONTO ESTACIONAMENTO",
+                pontos: [
+                    {lat: -23.534, lng: -46.734, nome: "Ponto Estacionamento Av. Gastão Vidigal", endereco: "Sentido bairro"}
+                ],
+                percurso: false
+            }
+        };
+
+        function showPoints(time) {
+            currentMarkers.clearLayers();
+            currentPolylines.forEach(pl => map.removeLayer(pl));
+            currentPolylines = [];
+
+            let config;
+            if (time === 'todos') {
+                config = {
+                    tipo: null,
+                    pontos: Object.values(horarios).flatMap(h => h.pontos.map(p => ({...p, tipo: h.tipo}))),
+                    percurso: false
+                };
+            } else {
+                config = horarios[time];
+                if (!config) return;
+            }
+
+            config.pontos.forEach(function(p) {
+                const tipo = p.tipo || config.tipo;
+                const icon = icons[tipo] || icons['PONTO ESTACIONAMENTO'];
+                L.marker([p.lat, p.lng], {icon: icon}).addTo(currentMarkers)
+                    .bindPopup(`
+                        <b>${p.nome}</b><br>
+                        ${p.endereco}<br><br>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}" target="_blank" rel="noopener" class="popup-link">
+                            Abrir no Google Maps →
+                        </a>
+                    `);
+            });
+
+            // Linha tracejada azul para PATRULHAMENTO com mais de 1 ponto
+            if (config.percurso && config.pontos.length > 1 && config.tipo === "PATRULHAMENTO") {
+                var coords = config.pontos.map(p => [p.lat, p.lng]);
+                var poly = L.polyline(coords, {
+                    color: '#66ccff',
+                    weight: 4,
+                    opacity: 0.8,
+                    dashArray: '10, 15'
+                }).addTo(map);
+                currentPolylines.push(poly);
+            }
+
+            // Ajusta bounds
+            if (config.pontos.length > 0) {
+                var group = L.featureGroup(currentMarkers.getLayers());
+                currentPolylines.forEach(pl => group.addLayer(pl));
+                map.fitBounds(group.getBounds().pad(0.3), { animate: true });
+            }
+        }
+
+        // Botões e seleção automática
+        const buttons = document.querySelectorAll('.time-btn');
+        function activateButton(time) {
+            buttons.forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.time-btn[data-time="${time}"]`);
+            if (btn) btn.classList.add('active');
+            showPoints(time);
+        }
+
+        function autoSelectByTime() {
+            const now = new Date();
+            const mins = now.getHours() * 60 + now.getMinutes();
+            const times = {
+                '14h00': 14*60 + 0,
+                '14h40': 14*60 + 40,
+                '15h00': 15*60 + 0,
+                '15h30': 15*60 + 30,
+                '16h30': 16*60 + 30,
+                '17h30': 17*60 + 30,
+                '18h00': 18*60 + 0,
+                '18h20': 18*60 + 20,
+                '19h00': 19*60 + 0,
+                '19h20': 19*60 + 20,
+                '20h00': 20*60 + 0
+            };
+            let closest = 'todos', minDiff = Infinity;
+            for (const [k, t] of Object.entries(times)) {
+                const diff = Math.abs(mins - t);
+                if (diff < minDiff) { minDiff = diff; closest = k; }
+            }
+            activateButton(closest);
+        }
+
+        buttons.forEach(btn => btn.addEventListener('click', () => activateButton(btn.dataset.time)));
+
+        // Inicializa
+        autoSelectByTime();
+        setTimeout(() => map.invalidateSize(), 400);
+        window.addEventListener('resize', () => setTimeout(() => map.invalidateSize(), 200));
+    </script>
+</body>
+</html>

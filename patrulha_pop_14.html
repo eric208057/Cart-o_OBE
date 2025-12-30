@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>POP-14 - Pontos de Estacionamento da Patrulha - SP</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+
+    <style>
+        body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+        header { background:#1a1a1a; padding:20px; text-align:center; }
+        h1 { margin:0; font-size:2.1rem; }
+        .back-btn { display:inline-block; margin:15px 20px; padding:12px 24px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
+        .back-btn:hover { background:#555; }
+        .folium-map { width:100%; height:calc(100vh - 280px); border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        footer { text-align:center; padding:12px; background:#1a1a1a; font-size:0.8rem; color:#888; }
+        .popup-link { color: #ff4d4d; font-weight: bold; text-decoration: underline; }
+        .control-panel { background:#1a1a1a; padding:12px; text-align:center; }
+        .time-btn { margin:6px; padding:10px 18px; background:#333; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; transition: all 0.2s; }
+        .time-btn:hover { background:#555; }
+        .time-btn.active { background:#0066cc; }
+        .legend { margin:10px auto; max-width:500px; font-size:0.9rem; color:#ccc; }
+        .legend span { margin:0 12px; }
+        .legend .pop { color:#4da6ff; }
+        .legend .bloqueio { color:#ff4d4d; }
+        .legend .refeicao { color:#66cc66; }
+    </style>
+</head>
+<body>
+
+    <header><h1>POP-14 - Pontos de Estacionamento da Patrulha - SP</h1></header>
+
+    <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+
+    <div class="control-panel">
+        <button class="time-btn" data-time="14h00" title="14:00 – 15:15">14:00 - 15:15 (POP)</button>
+        <button class="time-btn" data-time="15h15" title="15:15 – 16:00">15:15 - 16:00 (REFEIÇÃO)</button>
+        <button class="time-btn" data-time="17h15" title="17:15 – 20:30">17:15 - 20:30 (POP)</button>
+        <button class="time-btn" data-time="todos">Todos os Pontos</button>
+
+        <div class="legend">
+            <span class="pop">● POP</span>
+            <span class="bloqueio">● BLOQUEIO</span>
+            <span class="refeicao">● REFEIÇÃO</span>
+        </div>
+    </div>
+
+    <div class="folium-map" id="map_patrulha"></div>
+
+    <footer>Sistema de Informação OBE • POP-14 • 2025</footer>
+
+    <script>
+        var map = L.map('map_patrulha', {
+            center: [-23.5281, -46.7251],
+            zoom: 16,
+            zoomControl: true
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Ícones diferenciados por tipo
+        const icons = {
+            'POP': L.AwesomeMarkers.icon({ icon: 'car', markerColor: 'blue', prefix: 'fa', iconColor: 'white' }),
+            'BLOQUEIO': L.AwesomeMarkers.icon({ icon: 'ban', markerColor: 'red', prefix: 'fa', iconColor: 'white' }),
+            'REFEIÇÃO': L.AwesomeMarkers.icon({ icon: 'cutlery', markerColor: 'green', prefix: 'fa', iconColor: 'white' })
+        };
+
+        var currentMarkers = L.layerGroup().addTo(map);
+        var currentPolyline = null;
+
+        // Dados do POP-14
+        var horarios = {
+            "14h00": {
+                tipo: "POP",
+                pontos: [
+                    {lat: -23.527240, lng: -46.723860, nome: "POP - Início R. Racine", endereco: "R. Passo da Pátria da R. Racine (sentido R. Jataí / centro)"},
+                    {lat: -23.528980, lng: -46.726320, nome: "POP - Final até R. Jataí", endereco: "R. Passo da Pátria × R. Jataí"}
+                ],
+                percurso: true
+            },
+            "15h15": {
+                tipo: "REFEIÇÃO",
+                pontos: [
+                    {lat: -23.527960, lng: -46.724880, nome: "REFEIÇÃO - R. Passo da Pátria, 1601", endereco: "Passo da Pátria, 1601"}
+                ],
+                percurso: false
+            },
+            "17h15": {
+                tipo: "POP",
+                pontos: [
+                    {lat: -23.528980, lng: -46.726320, nome: "POP - Início R. Jataí", endereco: "R. Passo da Pátria da R. Jataí (sentido R. Racine)"},
+                    {lat: -23.527240, lng: -46.723860, nome: "POP - Final até R. Racine", endereco: "R. Passo da Pátria × R. Racine"}
+                ],
+                percurso: true
+            }
+        };
+
+        function showPoints(time) {
+            currentMarkers.clearLayers();
+            if (currentPolyline) {
+                map.removeLayer(currentPolyline);
+                currentPolyline = null;
+            }
+
+            let config;
+            if (time === 'todos') {
+                config = {
+                    tipo: null,
+                    pontos: Object.values(horarios).flatMap(h => h.pontos.map(p => ({...p, tipo: h.tipo}))),
+                    percurso: false
+                };
+            } else {
+                config = horarios[time];
+                if (!config) return;
+            }
+
+            config.pontos.forEach(function(p) {
+                const icon = icons[p.tipo || config.tipo] || icons['POP'];
+                L.marker([p.lat, p.lng], {icon: icon}).addTo(currentMarkers)
+                    .bindPopup(`
+                        <b>${p.nome}</b><br>
+                        ${p.endereco}<br><br>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}" target="_blank" rel="noopener" class="popup-link">
+                            Abrir no Google Maps →
+                        </a>
+                    `);
+            });
+
+            // Linha pontilhada vermelha apenas para POP com percurso
+            if (config.percurso && config.pontos.length > 1 && config.tipo === "POP") {
+                var coords = config.pontos.map(p => [p.lat, p.lng]);
+                currentPolyline = L.polyline(coords, {
+                    color: '#ff4d4d',
+                    weight: 5,
+                    opacity: 0.9,
+                    dashArray: '12, 18'
+                }).addTo(map);
+            }
+
+            if (config.pontos.length > 0) {
+                var group = L.featureGroup(currentMarkers.getLayers());
+                if (currentPolyline) group.addLayer(currentPolyline);
+                map.fitBounds(group.getBounds().pad(0.3), { animate: true });
+            }
+        }
+
+        // Seleção automática e botões
+        const buttons = document.querySelectorAll('.time-btn');
+        function activateButton(time) {
+            buttons.forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.time-btn[data-time="${time}"]`);
+            if (btn) btn.classList.add('active');
+            showPoints(time);
+        }
+
+        function autoSelectByTime() {
+            const now = new Date();
+            const mins = now.getHours() * 60 + now.getMinutes();
+            const times = {
+                '14h00': 14*60 + 0,
+                '15h15': 15*60 + 15,
+                '17h15': 17*60 + 15
+            };
+            let closest = 'todos', minDiff = Infinity;
+            for (const [k, t] of Object.entries(times)) {
+                const diff = Math.abs(mins - t);
+                if (diff < minDiff) { minDiff = diff; closest = k; }
+            }
+            activateButton(closest);
+        }
+
+        buttons.forEach(btn => btn.addEventListener('click', () => activateButton(btn.dataset.time)));
+
+        // Inicialização
+        autoSelectByTime();
+        setTimeout(() => map.invalidateSize(), 400);
+        window.addEventListener('resize', () => setTimeout(() => map.invalidateSize(), 200));
+    </script>
+</body>
+</html>

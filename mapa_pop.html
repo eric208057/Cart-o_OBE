@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pontos de Estacionamento da Patrulha - Sistema OBE</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+
+    <style>
+        body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+        header { background:#1a1a1a; padding:20px; text-align:center; }
+        h1 { margin:0; font-size:2rem; }
+        .back-btn { display:inline-block; margin:20px; padding:12px 24px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
+        .back-btn:hover { background:#555; }
+        .folium-map { width:100%; height:80vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        footer { text-align:center; padding:15px; background:#1a1a1a; font-size:0.8rem; color:#888; }
+        .popup-link { color: #ff4d4d; font-weight: bold; text-decoration: underline; }
+        .control-panel { background:#1a1a1a; padding:10px; text-align:center; flex-wrap:wrap; }
+        .time-btn { margin:5px; padding:10px 20px; background:#333; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; }
+        .time-btn:hover { background:#555; }
+        .time-btn.active { background:#0066cc; }
+    </style>
+</head>
+<body>
+
+    <header><h1>Pontos de Estacionamento da Patrulha - SP</h1></header>
+
+    <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+
+    <div class="control-panel"></div>
+
+    <div class="folium-map" id="map_patrulha"></div>
+
+    <footer>Sistema de Informação OBE • 2025</footer>
+
+    <script>
+        var map = L.map('map_patrulha', {
+            center: [-23.534, -46.732],
+            zoom: 14,
+            zoomControl: true
+        });
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Ícone da viatura
+        var blueIcon = L.AwesomeMarkers.icon({
+            icon: 'car',
+            markerColor: 'blue',
+            prefix: 'fa',
+            iconColor: 'white'
+        });
+
+        var currentMarkers = L.layerGroup().addTo(map);
+        var currentPolylines = [];
+
+        function addPontos(pontos) {
+            pontos.forEach(function(p) {
+                L.marker([p.lat, p.lng], {icon: blueIcon}).addTo(currentMarkers)
+                    .bindPopup(`
+                        <b>${p.nome}</b><br>
+                        ${p.endereco}<br><br>
+                        <a href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}" target="_blank" rel="noopener" class="popup-link">
+                            Abrir no Google Maps →
+                        </a>
+                    `);
+            });
+        }
+
+        function addPolyline(pontos) {
+            var coords = pontos.map(p => [p.lat, p.lng]);
+            var pl = L.polyline(coords, {
+                color: '#ff4d4d',
+                weight: 4,
+                opacity: 0.8,
+                dashArray: '10, 15'
+            }).addTo(map);
+            currentPolylines.push(pl);
+        }
+
+        function showType(type) {
+            currentMarkers.clearLayers();
+            currentPolylines.forEach(pl => map.removeLayer(pl));
+            currentPolylines = [];
+
+            if (type === 'todos') {
+                Object.values(horarios).forEach(h => {
+                    addPontos(h.pontos);
+                    if (h.percurso && h.pontos.length > 1) {
+                        addPolyline(h.pontos);
+                    }
+                });
+            } else {
+                Object.values(horarios).forEach(h => {
+                    if (h.type === type) {
+                        addPontos(h.pontos);
+                        if (h.percurso && h.pontos.length > 1) {
+                            addPolyline(h.pontos);
+                        }
+                    }
+                });
+            }
+
+            if (currentMarkers.getLayers().length > 0) {
+                var group = new L.featureGroup(currentMarkers.getLayers());
+                currentPolylines.forEach(pl => group.addLayer(pl));
+                map.fitBounds(group.getBounds().pad(0.2));
+            }
+        }
+
+        // Carrega dados do JSON
+        var horarios = {};
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                horarios = data;
+
+                // Extrai tipos únicos
+                var types = new Set();
+                Object.values(horarios).forEach(h => {
+                    const match = h.label.match(/\((.*?)\)/);
+                    if (match) {
+                        h.type = match[1];
+                        types.add(h.type);
+                    }
+                });
+
+                // Cria botões dinamicamente por tipo
+                var controlPanel = document.querySelector('.control-panel');
+                var sortedTypes = Array.from(types).sort();
+                sortedTypes.forEach(t => {
+                    var btn = document.createElement('button');
+                    btn.classList.add('time-btn');
+                    btn.setAttribute('data-type', t);
+                    btn.textContent = t;
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        showType(t);
+                    });
+                    controlPanel.appendChild(btn);
+                });
+
+                // Adiciona botão "Todos os Pontos"
+                var todosBtn = document.createElement('button');
+                todosBtn.classList.add('time-btn');
+                todosBtn.setAttribute('data-type', 'todos');
+                todosBtn.textContent = 'Todos os Pontos';
+                todosBtn.addEventListener('click', function() {
+                    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    showType('todos');
+                });
+                controlPanel.appendChild(todosBtn);
+
+                // Inicia com POP ativo, se existir
+                var initialType = types.has('POP') ? 'POP' : sortedTypes[0] || 'todos';
+                var initialBtn = controlPanel.querySelector(`[data-type="${initialType}"]`);
+                if (initialBtn) {
+                    initialBtn.classList.add('active');
+                    showType(initialType);
+                }
+            })
+            .catch(error => console.error('Erro ao carregar data.json:', error));
+
+        setTimeout(() => map.invalidateSize(), 300);
+    </script>
+</body>
+</html>

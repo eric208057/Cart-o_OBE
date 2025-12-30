@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Teste JSON</title>
+</head>
+<body>
+  <pre id="result"></pre>
+
+  <script>
+    fetch('data.json')
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(data => {
+        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        document.getElementById('result').textContent = 'ERRO: ' + err.message;
+        console.error(err);
+      });
+  </script>
+</body>
+</html>

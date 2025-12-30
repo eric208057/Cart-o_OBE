@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mapa Força - Sistema OBE</title>
+    <style>
+        body { 
+            margin:0; 
+            padding:0; 
+            font-family:Arial, sans-serif; 
+            background:#000; 
+            color:#fff; 
+            min-height:100vh; 
+            display:flex; 
+            flex-direction:column; 
+        }
+        header { 
+            background:#1a1a1a; 
+            padding:20px; 
+            text-align:center; 
+            border-bottom:2px solid #333; 
+            position: relative;
+        }
+        h1 { 
+            margin:0; 
+            font-size:2.4rem; 
+        }
+        .back-btn { 
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            z-index: 10;
+        }
+        .back-btn:hover { 
+            background: #555; 
+        }
+        .container { 
+            padding: 30px 20px; 
+            text-align: center; 
+            flex: 1; 
+        }
+        .section { 
+            margin: 40px 0; 
+        }
+        .section h2 { 
+            font-size: 1.8rem; 
+            margin-bottom: 20px; 
+            color: #ccc; 
+            border-bottom: 1px solid #444; 
+            padding-bottom: 10px; 
+        }
+        .buttons-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 18px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+        }
+        .btn { 
+            background: #1a1a1a; 
+            color: white; 
+            padding: 25px 15px; 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+            text-decoration: none; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6); 
+            border: 2px solid transparent; 
+            display: block; 
+        }
+        .btn:hover { 
+            transform: translateY(-5px); 
+        }
+        .pop-btn { 
+            border-color: #8B0000; 
+        }
+        .vtr-btn { 
+            border-color: #006400; 
+        }
+        footer { 
+            text-align: center; 
+            padding: 15px; 
+            background: #1a1a1a; 
+            font-size: 0.8rem; 
+            color: #888; 
+            margin-top: auto; 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+        <h1>Relatório de Serviço Operacional (RSO)</h1>
+    </header>
+
+    <div class="container">
+
+        <div class="section">
+            <h2>POP's</h2>
+            <div class="buttons-grid">
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=401673012#gid=401673012" target="_blank" class="btn pop-btn">POP-1</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=890314411#gid=890314411" target="_blank" class="btn pop-btn">POP-2</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=779518663#gid=779518663" target="_blank" class="btn pop-btn">POP-3</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1569733166#gid=1569733166" target="_blank" class="btn pop-btn">POP-4</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=24748380#gid=24748380" target="_blank" class="btn pop-btn">POP-5</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1111767076#gid=1111767076" target="_blank" class="btn pop-btn">POP-6</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=880010619#gid=880010619" target="_blank" class="btn pop-btn">POP-7</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1544388576#gid=1544388576" target="_blank" class="btn pop-btn">POP-8</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1480607304#gid=1480607304" target="_blank" class="btn pop-btn">POP-9</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1862495290#gid=1862495290" target="_blank" class="btn pop-btn">POP-10</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1788207171#gid=1788207171" target="_blank" class="btn pop-btn">POP-11</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1187266701#gid=1187266701" target="_blank" class="btn pop-btn">POP-12</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=2089679692#gid=2089679692" target="_blank" class="btn pop-btn">POP-13</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1934531343#gid=1934531343" target="_blank" class="btn pop-btn">POP-14</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=32707868#gid=32707868" target="_blank" class="btn pop-btn">POP-15</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1696985956#gid=1696985956" target="_blank" class="btn pop-btn">POP-16</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=34822953#gid=34822953" target="_blank" class="btn pop-btn">POP-17</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>VTR's</h2>
+            <div class="buttons-grid">
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=720536994#gid=720536994" target="_blank" class="btn vtr-btn">VTR-1</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1252690885#gid=1252690885" target="_blank" class="btn vtr-btn">VTR-2</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1780449643#gid=1780449643" target="_blank" class="btn vtr-btn">VTR-3</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=519326673#gid=519326673" target="_blank" class="btn vtr-btn">VTR-4</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=316539490#gid=316539490" target="_blank" class="btn vtr-btn">VTR-5</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=118463034#gid=118463034" target="_blank" class="btn vtr-btn">VTR-6</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=263850715#gid=263850715" target="_blank" class="btn vtr-btn">VTR-7</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=430655807#gid=430655807" target="_blank" class="btn vtr-btn">VTR-8</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1821651176#gid=1821651176" target="_blank" class="btn vtr-btn">VTR-9</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=383628947#gid=383628947" target="_blank" class="btn vtr-btn">VTR-10</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=101567692#gid=101567692" target="_blank" class="btn vtr-btn">VTR-11</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=1732017498#gid=1732017498" target="_blank" class="btn vtr-btn">VTR-12</a>
+                <a href="https://docs.google.com/spreadsheets/d/1UKidL70wnkV1gtoiXiXdjlMROTLLSUPkW2zQQ6HrGS4/edit?gid=2005067892#gid=2005067892" target="_blank" class="btn vtr-btn">VTR-13</a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>Sistema de Informação OBE • 2025</footer>
+
+</body>
+</html>
