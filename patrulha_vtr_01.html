@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VTR-1 - Pontos da Patrulha + CPPs - SP</title>
+    <title>VTR-01 - Pontos Fixos CPP 1.1 - SP</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
@@ -16,19 +16,15 @@
         h1 { margin:0; font-size:2.1rem; }
         .back-btn { display:inline-block; margin:15px 20px; padding:12px 24px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
         .back-btn:hover { background:#555; }
-        .folium-map { width:100%; height:calc(100vh - 320px); border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        .folium-map { width:100%; height:calc(100vh - 300px); border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
         footer { text-align:center; padding:12px; background:#1a1a1a; font-size:0.8rem; color:#888; }
         .popup-link { color: #ff4d4d; font-weight: bold; text-decoration: underline; }
-        .control-panel { background:#1a1a1a; padding:12px; text-align:center; }
-        .time-btn { margin:6px; padding:10px 18px; background:#333; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; transition: all 0.2s; }
-        .time-btn:hover { background:#555; }
-        .time-btn.active { background:#0066cc; }
-        .legend { margin:10px auto; max-width:600px; font-size:0.9rem; color:#ccc; text-align:center; }
-        .legend span { margin:0 14px; }
-        .legend .patrulhamento { color:#66ccff; }
-        .legend .estacionamento { color:#4da6ff; }
-        .legend .refeicao { color:#66cc66; }
-        .legend .bloqueio { color:#ff4d4d; }
+        .control-panel { background:#1a1a1a; padding:16px; text-align:center; }
+        .point-btn { margin:6px 4px; padding:12px 20px; background:#333; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; transition: all 0.2s; min-width:120px; }
+        .point-btn:hover { background:#555; }
+        .point-btn.active { background:#0066cc; }
+        .legend { margin:12px auto; max-width:700px; font-size:0.95rem; color:#ccc; text-align:center; }
+        .legend span { margin:0 16px; }
         .legend .cpp01 { color:#FBC02D; }
         .legend .cpp02 { color:#7CB342; }
         .legend .cpp03 { color:#01579B; }
@@ -36,44 +32,31 @@
 </head>
 <body>
 
-    <header><h1>VTR-1 - Pontos da Patrulha + Áreas CPP - SP</h1></header>
+    <header><h1>VTR-01 - Pontos Fixos CPP 1.1 - SP</h1></header>
 
     <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
 
     <div class="control-panel">
-        <button class="time-btn" data-time="14h00" title="14:00 – 14:40">14:00 - 14:40 (PATRULHAMENTO)</button>
-        <button class="time-btn" data-time="14h40" title="14:40 – 15:00">14:40 - 15:00 (PONTO ESTACIONAMENTO)</button>
-        <button class="time-btn" data-time="15h00" title="15:00 – 15:30">15:00 - 15:30 (PATRULHAMENTO)</button>
-        <button class="time-btn" data-time="15h30" title="15:30 – 16:15">15:30 - 16:15 (REFEIÇÃO)</button>
-        <button class="time-btn" data-time="16h30" title="16:30 – 17:30">16:30 - 17:30 (OP BLOQUEIO)</button>
-        <button class="time-btn" data-time="17h30" title="17:30 – 18:00">17:30 - 18:00 (PATRULHAMENTO)</button>
-        <button class="time-btn" data-time="18h00" title="18:00 – 18:20">18:00 - 18:20 (PONTO ESTACIONAMENTO)</button>
-        <button class="time-btn" data-time="18h20" title="18:20 – 19:00">18:20 - 19:00 (PATRULHAMENTO)</button>
-        <button class="time-btn" data-time="19h00" title="19:00 – 19:20">19:00 - 19:20 (PONTO ESTACIONAMENTO)</button>
-        <button class="time-btn" data-time="19h20" title="19:20 – 20:00">19:20 - 20:00 (PATRULHAMENTO)</button>
-        <button class="time-btn" data-time="20h00" title="20:00 – 20:20">20:00 - 20:20 (PONTO ESTACIONAMENTO)</button>
-        <button class="time-btn" data-time="todos">Todos os Pontos</button>
-
+        <button class="point-btn" data-id="PE 1" onclick="centralizar('PE 1')">PE 1</button>
+        <button class="point-btn" data-id="OP BLOQUEIO" onclick="centralizar('OP BLOQUEIO')">OP BLOQUEIO</button>
+        <button class="point-btn" data-id="PE 2" onclick="centralizar('PE 2')">PE 2</button>
+        <button class="point-btn" data-id="PE 3" onclick="centralizar('PE 3')">PE 3</button>
+        <button class="point-btn" data-id="PE 4" onclick="centralizar('PE 4')">PE 4</button>
         <div class="legend">
-            <span class="patrulhamento">── PATRULHAMENTO</span>
-            <span class="estacionamento">● ESTACIONAMENTO</span>
-            <span class="refeicao">● REFEIÇÃO</span>
-            <span class="bloqueio">● OP BLOQUEIO</span>
-            <br><br>
             <span class="cpp01">██ CPP-01</span>
             <span class="cpp02">██ CPP-02</span>
             <span class="cpp03">██ CPP-03</span>
         </div>
     </div>
 
-    <div class="folium-map" id="map_vtr1"></div>
+    <div class="folium-map" id="mapa"></div>
 
-    <footer>Sistema de Informação OBE • VTR-1 • 2025</footer>
+    <footer>Sistema de Informação OBE • PATRULHA-VTR-01 • 2025</footer>
 
     <script>
-        var map = L.map('map_vtr1', {
-            center: [-23.5315, -46.730],
-            zoom: 15,
+        var map = L.map('mapa', {
+            center: [-23.53, -46.73],
+            zoom: 14,
             zoomControl: true
         });
 
@@ -82,230 +65,62 @@
             maxZoom: 19
         }).addTo(map);
 
-        // ───────────────────────────────────────────────
-        //  POLÍGONOS CPP (sempre visíveis)
-        // ───────────────────────────────────────────────
-        const cppData = {
-            "type": "FeatureCollection",
-            "features": [
-                {
-                    "type": "Feature",
-                    "properties": { "name": "CPP-01", "fillColor": "#FBC02D" },
-                    "geometry": {
-                        "type": "Polygon",
-                        "coordinates": [[
-                            [-46.7412559, -23.5180041], [-46.7431222, -23.5181629], [-46.7445164, -23.5185972],
-                            [-46.7454387, -23.5193068], [-46.7464038, -23.5206067], [-46.747167, -23.5219729],
-                            [-46.7478443, -23.5236145], [-46.7479638, -23.5253348], [-46.7480832, -23.5274879],
-                            [-46.7478501, -23.5314007], [-46.747476, -23.5330029], [-46.7465011, -23.5342904],
-                            [-46.740155, -23.5399125], [-46.7341064, -23.5452414], [-46.7336367, -23.5449049],
-                            [-46.7255717, -23.5374365], [-46.726738, -23.5356636], [-46.7281617, -23.5340482],
-                            [-46.7311806, -23.5308959], [-46.7369607, -23.5245126], [-46.7402437, -23.5272473],
-                            [-46.7410413, -23.5256378], [-46.7411701, -23.5228047], [-46.7412559, -23.5180041]
-                        ]]
-                    }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "name": "CPP-02", "fillColor": "#7CB342" },
-                    "geometry": {
-                        "type": "Polygon",
-                        "coordinates": [[
-                            [-46.7412559, -23.5180041], [-46.7411701, -23.5228047], [-46.7410413, -23.5256378],
-                            [-46.7402437, -23.5272473], [-46.7369607, -23.5244339], [-46.7311806, -23.5308959],
-                            [-46.726738, -23.5356636], [-46.7255717, -23.5373578], [-46.7248435, -23.5371399],
-                            [-46.7240509, -23.5370205], [-46.7224013, -23.5372143], [-46.7210307, -23.537408],
-                            [-46.7204205, -23.5373672], [-46.7199116, -23.5371796], [-46.7194962, -23.536771],
-                            [-46.7191237, -23.5362444], [-46.7186034, -23.5359382], [-46.7183191, -23.5346286],
-                            [-46.7194028, -23.5314391], [-46.7204543, -23.5269485], [-46.7213556, -23.5248925],
-                            [-46.7222568, -23.5213807], [-46.7235227, -23.5196445], [-46.7248423, -23.51856],
-                            [-46.7257596, -23.5174274], [-46.726076, -23.5152718], [-46.730976, -23.5178438],
-                            [-46.7329578, -23.5183302], [-46.7412559, -23.5180041]
-                        ]]
-                    }
-                },
-                {
-                    "type": "Feature",
-                    "properties": { "name": "CPP-03", "fillColor": "#01579B" },
-                    "geometry": {
-                        "type": "Polygon",
-                        "coordinates": [[
-                            [-46.726076, -23.5152718], [-46.7257596, -23.5174274], [-46.7248423, -23.51856],
-                            [-46.7235227, -23.5196445], [-46.7222568, -23.5213807], [-46.7213556, -23.5248925],
-                            [-46.7204543, -23.5269485], [-46.7195369, -23.5308672], [-46.7183191, -23.5346286],
-                            [-46.7186034, -23.5359382], [-46.7191237, -23.5362444], [-46.7143493, -23.5353639],
-                            [-46.7130918, -23.5323588], [-46.7128724, -23.5306299], [-46.7132455, -23.5268636],
-                            [-46.7135608, -23.5239771], [-46.7134899, -23.5232744], [-46.7130452, -23.5228146],
-                            [-46.7125654, -23.5223486], [-46.7122933, -23.5218598], [-46.712168, -23.52134],
-                            [-46.7121268, -23.5207948], [-46.7120847, -23.5206107], [-46.7115062, -23.520407],
-                            [-46.713534, -23.5141993], [-46.7144727, -23.5111348], [-46.7140623, -23.5105962],
-                            [-46.7141529, -23.5099057], [-46.7143936, -23.5093726], [-46.7142313, -23.5090541],
-                            [-46.7171172, -23.5088968], [-46.7186327, -23.5089312], [-46.7193368, -23.5091747],
-                            [-46.7198906, -23.5095559], [-46.7206698, -23.5102963], [-46.722715, -23.5130829],
-                            [-46.726076, -23.5152718]
-                        ]]
-                    }
-                }
-            ]
-        };
+        // Polígonos CPP (todos os três sempre visíveis)
+        const cppData = {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"name": "CPP-01", "fillColor": "#FBC02D"}, "geometry": {"type": "Polygon", "coordinates": [[[-46.7412559, -23.5180041], [-46.7431222, -23.5181629], [-46.7445164, -23.5185972], [-46.7454387, -23.5193068], [-46.7464038, -23.5206067], [-46.747167, -23.5219729], [-46.7478443, -23.5236145], [-46.7479638, -23.5253348], [-46.7480832, -23.5274879], [-46.7478501, -23.5314007], [-46.747476, -23.5330029], [-46.7465011, -23.5342904], [-46.740155, -23.5399125], [-46.7341064, -23.5452414], [-46.7336367, -23.5449049], [-46.7255717, -23.5374365], [-46.726738, -23.5356636], [-46.7281617, -23.5340482], [-46.7311806, -23.5308959], [-46.7369607, -23.5245126], [-46.7402437, -23.5272473], [-46.7410413, -23.5256378], [-46.7411701, -23.5228047], [-46.7412559, -23.5180041]]]}}, {"type": "Feature", "properties": {"name": "CPP-02", "fillColor": "#7CB342"}, "geometry": {"type": "Polygon", "coordinates": [[[-46.7412559, -23.5180041], [-46.7411701, -23.5228047], [-46.7410413, -23.5256378], [-46.7402437, -23.5272473], [-46.7369607, -23.5244339], [-46.7311806, -23.5308959], [-46.726738, -23.5356636], [-46.7255717, -23.5373578], [-46.7248435, -23.5371399], [-46.7240509, -23.5370205], [-46.7224013, -23.5372143], [-46.7210307, -23.537408], [-46.7204205, -23.5373672], [-46.7199116, -23.5371796], [-46.7194962, -23.536771], [-46.7191237, -23.5362444], [-46.7186034, -23.5359382], [-46.7183191, -23.5346286], [-46.7194028, -23.5314391], [-46.7204543, -23.5269485], [-46.7213556, -23.5248925], [-46.7222568, -23.5213807], [-46.7235227, -23.5196445], [-46.7248423, -23.51856], [-46.7257596, -23.5174274], [-46.726076, -23.5152718], [-46.730976, -23.5178438], [-46.7329578, -23.5183302], [-46.7412559, -23.5180041]]]}}, {"type": "Feature", "properties": {"name": "CPP-03", "fillColor": "#01579B"}, "geometry": {"type": "Polygon", "coordinates": [[[-46.726076, -23.5152718], [-46.7257596, -23.5174274], [-46.7248423, -23.51856], [-46.7235227, -23.5196445], [-46.7222568, -23.5213807], [-46.7213556, -23.5248925], [-46.7204543, -23.5269485], [-46.7195369, -23.5308672], [-46.7183191, -23.5346286], [-46.7186034, -23.5359382], [-46.7191237, -23.5362444], [-46.7143493, -23.5353639], [-46.7130918, -23.5323588], [-46.7128724, -23.5306299], [-46.7132455, -23.5268636], [-46.7135608, -23.5239771], [-46.7134899, -23.5232744], [-46.7130452, -23.5228146], [-46.7125654, -23.5223486], [-46.7122933, -23.5218598], [-46.712168, -23.52134], [-46.7121268, -23.5207948], [-46.7120847, -23.5206107], [-46.7115062, -23.520407], [-46.713534, -23.5141993], [-46.7144727, -23.5111348], [-46.7140623, -23.5105962], [-46.7141529, -23.5099057], [-46.7143936, -23.5093726], [-46.7142313, -23.5090541], [-46.7171172, -23.5088968], [-46.7186327, -23.5089312], [-46.7193368, -23.5091747], [-46.7198906, -23.5095559], [-46.7206698, -23.5102963], [-46.722715, -23.5130829], [-46.726076, -23.5152718]]]}}]};
 
-        // Adiciona os polígonos (preenchidos e com borda)
         L.geoJSON(cppData, {
             style: feature => ({
                 color: feature.properties.fillColor,
                 weight: 2.5,
-                opacity: 0.85,
+                opacity: 0.9,
                 fillColor: feature.properties.fillColor,
-                fillOpacity: 0.28   // Ajuste aqui se quiser mais/menos transparente (0.15 = quase invisível, 0.5 = bem visível)
+                fillOpacity: 0.25
             }),
             onEachFeature: (feature, layer) => {
                 layer.bindPopup(`<b>Área ${feature.properties.name}</b>`);
             }
-        }).addTo(map);  // Adicionado ANTES dos marcadores para ficar "no fundo"
+        }).addTo(map);
 
-        // ───────────────────────────────────────────────
-        //  Ícones e lógica dos pontos (igual ao original)
-        // ───────────────────────────────────────────────
+        // Marcadores
+        const marcadores = {};
         const icons = {
-            'PATRULHAMENTO': L.AwesomeMarkers.icon({ icon: 'car', markerColor: 'lightblue', prefix: 'fa', iconColor: 'white' }),
-            'PONTO ESTACIONAMENTO': L.AwesomeMarkers.icon({ icon: 'car', markerColor: 'blue', prefix: 'fa', iconColor: 'white' }),
-            'REFEIÇÃO': L.AwesomeMarkers.icon({ icon: 'cutlery', markerColor: 'green', prefix: 'fa', iconColor: 'white' }),
-            'OP BLOQUEIO': L.AwesomeMarkers.icon({ icon: 'ban', markerColor: 'red', prefix: 'fa', iconColor: 'white' })
+            'OP BLOQUEIO': L.AwesomeMarkers.icon({icon: 'ban', markerColor: 'red', prefix: 'fa', iconColor: 'white'}),
+            'default':      L.AwesomeMarkers.icon({icon: 'car', markerColor: 'blue', prefix: 'fa', iconColor: 'white'})
         };
 
-        var currentMarkers = L.layerGroup().addTo(map);
-        var currentPolylines = [];
+        const pontos = [{"id": "PE 1", "nome": "PE 1", "endereco": "Av. José César de Oliveira, 21 - Vila Leopoldina", "lat": -23.539600294412644, "lng": -46.73399579004857}, {"id": "OP BLOQUEIO", "nome": "OP BLOQUEIO", "endereco": "Av. Dr. Gastão Vidigal, 1142 - Vila Leopoldina", "lat": -23.528903888196563, "lng": -46.739219300274584}, {"id": "PE 2", "nome": "PE 2", "endereco": "Av. Queiroz Filho, 1700 - Vila Hamburguesa", "lat": -23.543194691386972, "lng": -46.73265171533143}, {"id": "PE 3", "nome": "PE 3", "endereco": "Av. Queiroz Filho, 1315 - Portão 2 - Parque Villa-Lobos", "lat": -23.54182339721191, "lng": -46.73028311175224}, {"id": "PE 4", "nome": "PE 4", "endereco": "Av. Queiroz Filho, 113 - Parque da Lapa", "lat": -23.537408346784343, "lng": -46.721304176823345}];
 
-        // (seus dados de horários permanecem iguais)
-        var horarios = {
-            "14h00": { tipo: "PATRULHAMENTO", pontos: [
-                {lat: -23.536, lng: -46.733, nome: "Início Av. Gastão Vidigal", endereco: "Av. Gastão Vidigal (altura 1140)"},
-                {lat: -23.532, lng: -46.735, nome: "Marginal Pinheiros proximidades", endereco: "Marginal Pinheiros × Gastão Vidigal"},
-                {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Av. Queiroz Filho sentido centro"}
-            ], percurso: true },
-            "14h40": { tipo: "PONTO ESTACIONAMENTO", pontos: [
-                {lat: -23.530, lng: -46.727, nome: "Ponto Estacionamento Av. Queiroz Filho", endereco: "Frente ao Parque Villa-Lobos, sentido centro"}
-            ], percurso: false },
-            "15h00": { tipo: "PATRULHAMENTO", pontos: [
-                {lat: -23.534, lng: -46.734, nome: "Av. Gastão Vidigal", endereco: "Av. Gastão Vidigal sentido centro"},
-                {lat: -23.531, lng: -46.729, nome: "Av. Imperatriz Leopoldina", endereco: "Av. Imperatriz Leopoldina"},
-                {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Av. Queiroz Filho sentido centro"}
-            ], percurso: true },
-            "15h30": { tipo: "REFEIÇÃO", pontos: [
-                {lat: -23.5315, lng: -46.7285, nome: "REFEIÇÃO - Rua Schilling 512", endereco: "Rua Schilling, 512 - Igreja Universal"}
-            ], percurso: false },
-            "16h30": { tipo: "OP BLOQUEIO", pontos: [
-                {lat: -23.536, lng: -46.733, nome: "BLOQUEIO Av. Gastão Vidigal", endereco: "Altura do numeral 1142"}
-            ], percurso: false },
-            "17h30": { tipo: "PATRULHAMENTO", pontos: [
-                {lat: -23.536, lng: -46.733, nome: "Av. Gastão Vidigal", endereco: "Av. Gastão Vidigal sentido bairro"},
-                {lat: -23.532, lng: -46.735, nome: "Marginal Pinheiros", endereco: "Marginal Pinheiros proximidades"},
-                {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Av. Queiroz Filho sentido bairro"}
-            ], percurso: true },
-            "18h00": { tipo: "PONTO ESTACIONAMENTO", pontos: [
-                {lat: -23.530, lng: -46.727, nome: "Ponto Estacionamento Av. Queiroz Filho", endereco: "Sentido bairro"}
-            ], percurso: false },
-            "18h20": { tipo: "PATRULHAMENTO", pontos: [
-                {lat: -23.534, lng: -46.734, nome: "Av. Gastão Vidigal", endereco: "Av. Gastão Vidigal sentido bairro"},
-                {lat: -23.531, lng: -46.729, nome: "Av. Imperatriz Leopoldina", endereco: "Av. Imperatriz Leopoldina"},
-                {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Av. Queiroz Filho sentido bairro"}
-            ], percurso: true },
-            "19h00": { tipo: "PONTO ESTACIONAMENTO", pontos: [
-                {lat: -23.530, lng: -46.727, nome: "Ponto Estacionamento Av. Queiroz Filho", endereco: "Sentido centro"}
-            ], percurso: false },
-            "19h20": { tipo: "PATRULHAMENTO", pontos: [
-                {lat: -23.530, lng: -46.727, nome: "Av. Queiroz Filho", endereco: "Frente ao Parque Villa-Lobos sentido bairro"}
-            ], percurso: true },
-            "20h00": { tipo: "PONTO ESTACIONAMENTO", pontos: [
-                {lat: -23.534, lng: -46.734, nome: "Ponto Estacionamento Av. Gastão Vidigal", endereco: "Sentido bairro"}
-            ], percurso: false }
-        };
+        pontos.forEach(p => {
+            const icone = (p.id.includes('BLOQUEIO')) ? icons['OP BLOQUEIO'] : icons['default'];
+            const marker = L.marker([p.lat, p.lng], {icon: icone}).addTo(map)
+                .bindPopup(`
+                    <b>${p.nome}</b><br>
+                    ${p.endereco}<br><br>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}" target="_blank" class="popup-link">
+                        Abrir no Google Maps →
+                    </a>
+                `);
+            marcadores[p.id] = marker;
+        });
 
-        function showPoints(time) {
-            currentMarkers.clearLayers();
-            currentPolylines.forEach(pl => map.removeLayer(pl));
-            currentPolylines = [];
-
-            let config;
-            if (time === 'todos') {
-                config = {
-                    tipo: null,
-                    pontos: Object.values(horarios).flatMap(h => h.pontos.map(p => ({...p, tipo: h.tipo}))),
-                    percurso: false
-                };
-            } else {
-                config = horarios[time];
-                if (!config) return;
-            }
-
-            config.pontos.forEach(function(p) {
-                const tipo = p.tipo || config.tipo;
-                const icon = icons[tipo] || icons['PONTO ESTACIONAMENTO'];
-                L.marker([p.lat, p.lng], {icon: icon}).addTo(currentMarkers)
-                    .bindPopup(`
-                        <b>${p.nome}</b><br>
-                        ${p.endereco}<br><br>
-                        <a href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}" target="_blank" rel="noopener" class="popup-link">
-                            Abrir no Google Maps →
-                        </a>
-                    `);
-            });
-
-            if (config.percurso && config.pontos.length > 1 && config.tipo === "PATRULHAMENTO") {
-                var coords = config.pontos.map(p => [p.lat, p.lng]);
-                var poly = L.polyline(coords, {
-                    color: '#66ccff',
-                    weight: 4,
-                    opacity: 0.8,
-                    dashArray: '10, 15'
-                }).addTo(map);
-                currentPolylines.push(poly);
-            }
-
-            if (config.pontos.length > 0) {
-                var group = L.featureGroup(currentMarkers.getLayers());
-                currentPolylines.forEach(pl => group.addLayer(pl));
-                map.fitBounds(group.getBounds().pad(0.3), { animate: true });
-            }
-        }
-
-        const buttons = document.querySelectorAll('.time-btn');
-        function activateButton(time) {
-            buttons.forEach(b => b.classList.remove('active'));
-            const btn = document.querySelector(`.time-btn[data-time="${time}"]`);
+        // Função dos botões
+        function centralizar(id) {
+            document.querySelectorAll('.point-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.point-btn[data-id="${id}"]`);
             if (btn) btn.classList.add('active');
-            showPoints(time);
-        }
 
-        function autoSelectByTime() {
-            const now = new Date();
-            const mins = now.getHours() * 60 + now.getMinutes();
-            const times = {
-                '14h00': 14*60 + 0,
-                '14h40': 14*60 + 40,
-                '15h00': 15*60 + 0,
-                '15h30': 15*60 + 30,
-                '16h30': 16*60 + 30,
-                '17h30': 17*60 + 30,
-                '18h00': 18*60 + 0,
-                '18h20': 18*60 + 20,
-                '19h00': 19*60 + 0,
-                '19h20': 19*60 + 20,
-                '20h00': 20*60 + 0
-            };
-            let closest = 'todos', minDiff = Infinity;
-            for (const [k, t] of Object.entries(times)) {
-                const diff = Math.abs(mins - t);
-                if (diff < minDiff) { minDiff = diff; closest = k; }
+            const m = marcadores[id];
+            if (m) {
+                map.setView(m.getLatLng(), 16, { animate: true });
+                m.openPopup();
             }
-            activateButton(closest);
         }
 
-        buttons.forEach(btn => btn.addEventListener('click', () => activateButton(btn.dataset.time)));
-
-        // Inicializa
-        autoSelectByTime();
-        setTimeout(() => map.invalidateSize(), 400);
+        // Inicializa abrindo o primeiro ponto
+        if (Object.keys(marcadores).length > 0) {
+            centralizar(Object.keys(marcadores)[0]);
+        }
+        setTimeout(() => map.invalidateSize(), 300);
         window.addEventListener('resize', () => setTimeout(() => map.invalidateSize(), 200));
     </script>
 </body>
