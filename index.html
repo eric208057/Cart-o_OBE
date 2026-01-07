@@ -5,16 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sistema OBE</title>
     <style>
-        body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
-        header { background:#1a1a1a; padding:20px; text-align:center; }
-        h1 { margin:0; font-size:2.2rem; }
-        .logos { display:flex; justify-content:space-between; padding:20px; max-width:1000px; margin:0 auto; }
-        .logos img { max-height:100px; object-fit:contain; }
-        .container { padding:20px; text-align:center; flex:1; }
-        .buttons-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:20px; max-width:1000px; margin:0 auto; }
-        .btn { background:#1a1a1a; color:white; padding:30px 15px; font-size:1.4rem; font-weight:bold; text-decoration:none; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.6); border:2px solid transparent; display:block; }
-        .btn:hover { transform:translateY(-5px); }
-        /* Cores alternadas nos botões (continuando a sequência) */
+        body { 
+            margin:0; 
+            padding:0; 
+            font-family:Arial, sans-serif; 
+            background:#000; 
+            color:#fff; 
+            min-height:100vh; 
+            display:flex; 
+            flex-direction:column; 
+        }
+        header { 
+            background:#1a1a1a; 
+            padding:20px; 
+            text-align:center; 
+        }
+        h1 { 
+            margin:0; 
+            font-size:2.2rem; 
+        }
+        .logos { 
+            display:flex; 
+            justify-content:space-between; 
+            padding:20px; 
+            max-width:1000px; 
+            margin:0 auto; 
+        }
+        .logos img { 
+            max-height:100px; 
+            object-fit:contain; 
+        }
+        .container { 
+            padding:20px; 
+            text-align:center; 
+            flex:1; 
+        }
+        .buttons-grid { 
+            display:grid; 
+            grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); 
+            gap:20px; 
+            max-width:1000px; 
+            margin:0 auto 40px auto; /* espaçamento extra abaixo do grid */
+        }
+        .btn { 
+            background:#1a1a1a; 
+            color:white; 
+            padding:30px 15px; 
+            font-size:1.4rem; 
+            font-weight:bold; 
+            text-decoration:none; 
+            border-radius:12px; 
+            box-shadow:0 4px 10px rgba(0,0,0,0.6); 
+            border:2px solid transparent; 
+            display:block; 
+        }
+        .btn:hover { 
+            transform:translateY(-5px); 
+        }
+        /* Cores alternadas nos botões do grid */
         .btn:nth-child(1){border-color:#8B0000;} 
         .btn:nth-child(2){border-color:#003366;} 
         .btn:nth-child(3){border-color:#4A4A4A;}
@@ -23,6 +71,26 @@
         .btn:nth-child(6){border-color:#4A4A4A;}
         .btn:nth-child(7){border-color:#8B0000;}  /* Escala de Serviço */
         .btn:nth-child(8){border-color:#003366;}  /* CPP */
+
+        /* Estilo especial para o botão Créditos (fora do grid) */
+        .credits-btn { 
+            background:#1a1a1a; 
+            color:white; 
+            padding:25px 40px; 
+            font-size:1.5rem; 
+            font-weight:bold; 
+            text-decoration:none; 
+            border-radius:12px; 
+            box-shadow:0 4px 10px rgba(0,0,0,0.6); 
+            border:2px solid #FFD700; /* borda dourada para destacar */
+            display:inline-block; 
+            margin:40px auto 20px auto; /* centralizado com espaçamento acima e abaixo */
+            width: auto;
+            max-width: 400px;
+        }
+        .credits-btn:hover { 
+            transform:translateY(-5px); 
+        }
     </style>
 </head>
 <body>
@@ -41,13 +109,13 @@
             <a href="mapa_pontos_apoio.html" class="btn">Pontos de Apoio</a>
             <a href="pops.html" class="btn">POP's</a>
             <a href="rso.html" class="btn">RSO</a>
-            <a href="creditos.html" class="btn">Créditos</a>
-            <!-- 
-            <a href="insercao_resultados.html" class="btn">Inserção de Resultados</a>
-            -->
+            <!-- Botão Créditos removido daqui -->
             <a href="https://docs.google.com/document/d/1ToijM8Nfe8DpBtX6gdlhJSrLHUNptBED/edit" class="btn" target="_blank">Escala de Serviço</a>
             <a href="https://www.google.com/maps/d/viewer?ll=-23.526222797795665%2C-46.71759533844947&z=15&mid=1GQkG2sQ8S6LkDoHpmRtabSGou6gpyQU" class="btn" target="_blank">Cartão de Prioridade de Patrulhamento (CPP)</a>
         </div>
+
+        <!-- Botão Créditos fora do grid, centralizado -->
+        <a href="creditos.html" class="credits-btn">Créditos</a>
     </div>
 
     <footer>Sistema de Informação OBE • 2025</footer>
