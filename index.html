@@ -45,7 +45,7 @@
             grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); 
             gap:20px; 
             max-width:1000px; 
-            margin:0 auto 40px auto; /* espaçamento extra abaixo do grid */
+            margin:0 auto 40px auto;
         }
         .btn { 
             background:#1a1a1a; 
@@ -62,17 +62,16 @@
         .btn:hover { 
             transform:translateY(-5px); 
         }
-        /* Cores alternadas nos botões do grid */
+        /* Cores alternadas nos botões */
         .btn:nth-child(1){border-color:#8B0000;} 
         .btn:nth-child(2){border-color:#003366;} 
         .btn:nth-child(3){border-color:#4A4A4A;}
         .btn:nth-child(4){border-color:#8B0000;} 
         .btn:nth-child(5){border-color:#003366;} 
         .btn:nth-child(6){border-color:#4A4A4A;}
-        .btn:nth-child(7){border-color:#8B0000;}  /* Escala de Serviço */
-        .btn:nth-child(8){border-color:#003366;}  /* CPP */
+        .btn:nth-child(7){border-color:#8B0000;} 
+        .btn:nth-child(8){border-color:#003366;}
 
-        /* Estilo especial para o botão Créditos (fora do grid) */
         .credits-btn { 
             background:#1a1a1a; 
             color:white; 
@@ -82,14 +81,24 @@
             text-decoration:none; 
             border-radius:12px; 
             box-shadow:0 4px 10px rgba(0,0,0,0.6); 
-            border:2px solid #FFD700; /* borda dourada para destacar */
+            border:2px solid #FFD700;
             display:inline-block; 
-            margin:40px auto 20px auto; /* centralizado com espaçamento acima e abaixo */
+            margin:40px auto 40px auto;
             width: auto;
             max-width: 400px;
         }
         .credits-btn:hover { 
             transform:translateY(-5px); 
+        }
+
+        footer {
+            background: #1a1a1a;
+            padding: 15px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #aaa;
+            margin-top: auto;           /* empurra pro final quando usa flex */
+            width: 100%;
         }
     </style>
 </head>
@@ -109,12 +118,10 @@
             <a href="mapa_pontos_apoio.html" class="btn">Pontos de Apoio</a>
             <a href="pops.html" class="btn">POP's</a>
             <a href="rso.html" class="btn">RSO</a>
-            <!-- Botão Créditos removido daqui -->
             <a href="https://docs.google.com/document/d/1ToijM8Nfe8DpBtX6gdlhJSrLHUNptBED/edit" class="btn" target="_blank">Escala de Serviço</a>
             <a href="https://www.google.com/maps/d/viewer?ll=-23.526222797795665%2C-46.71759533844947&z=15&mid=1GQkG2sQ8S6LkDoHpmRtabSGou6gpyQU" class="btn" target="_blank">Cartão de Prioridade de Patrulhamento (CPP)</a>
         </div>
 
-        <!-- Botão Créditos fora do grid, centralizado -->
         <a href="creditos.html" class="credits-btn">Créditos</a> 
     </div>
 
