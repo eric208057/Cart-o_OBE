@@ -1,67 +1,36 @@
-# -*- coding: utf-8 -*-
-"""
-Gera arquivos HTML individuais para cada Ponto de Estacionamento da Patrulha (POP)
-com mapa + visualizador de PDF da documentação abaixo do mapa.
-PDFs no formato: "pop 01.pdf", "pop 02.pdf", ..., "pop 17.pdf" (com espaço)
-"""
-
-import os
-
-# Lista completa de 17 pontos
-pontos = [
-    ("POP 01", "Av. Imperatriz Leopoldina, 189 - Vila Leopoldina, São Paulo - SP, 05305-000", -23.52490165017507, -46.736400400274555),
-    ("POP 02", "Av. Imperatriz Leopoldina, 170 - Nova Petrópolis, São Paulo - SP, 05305-000", -23.52502421597281, -46.73657280970732),
-    ("POP 03", "Av. Imperatriz Leopoldina, 591 - Vila Leopoldina, São Paulo - SP, 05305-010", -23.52770241024094, -46.73374206471096),
-    ("POP 04", "Av. Imperatriz Leopoldina, 630 - Vila Leopoldina, São Paulo - SP, 05305-060", -23.5279070287481, -46.73376691806593),
-    ("POP 05", "Av. Imperatriz Leopoldina, 1217 - Vila Leopoldina, São Paulo - SP, 05305-012", -23.53197218364515, -46.72975256541207),
-    ("POP 06", "Av. Imperatriz Leopoldina, 1190 - Vila Leopoldina, São Paulo - SP, 05305-060", -23.532167315242937, -46.72964116372763),
-    ("POP 07", "R. Carlos Weber, 1129 - Vila Leopoldina, São Paulo - SP, 05303-000", -23.52992290273724, -46.728481146900805),
-    ("POP 08", "R. Carlos Weber, 1134 - Vila Leopoldina, São Paulo - SP, 05303-000", -23.530067994740445, -46.72858575304088),
-    ("POP 09", "R. Guaipá, 1473 - Vila Leopoldina, São Paulo - SP, 05089-001", -23.523055775081147, -46.73598499392638),
-    ("POP 10", "R. Guaipá, 1488 - Vila Leopoldina, São Paulo - SP, 05089-000", -23.522921353052432, -46.736244371791585),
-    ("POP 11", "R. Schilling, 491 - Vila Leopoldina, São Paulo - SP, 05302-001", -23.530902830757007, -46.72913436500277),
-    ("POP 12", "R. Schilling, 512 - Vila Leopoldina, São Paulo - SP, 05302-001", -23.530919374022385, -46.72946027906084),
-    ("POP 13", "R. Brentano, 435 - Vila Leopoldina, São Paulo - SP, 05302-041", -23.533084170765385, -46.72661811978115),
-    ("POP 14", "R. Brentano, 396 - Vila Leopoldina, São Paulo - SP, 05302-041", -23.532592123990188, -46.72647842966529),
-    ("POP 15", "R. Nanuque, 363 - Vila Leopoldina, São Paulo - SP, 05302-031", -23.5300731445172, -46.72635446757632),
-    ("POP 16", "R. Nanuque, 354 - Vila Leopoldina, São Paulo - SP, 05302-031", -23.530108792093984, -46.726661718068165),
-    ("POP 17", "R. Carlos Weber, 1340 - Vila Leopoldina, São Paulo - SP, 05303-000", -23.53144321842802, -46.727297502985486),
-]
-
-# Template HTML completo (com PDF viewer e dados originais)
-HTML_TEMPLATE = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>{titulo} - Ponto de Estacionamento da Patrulha - SP</title>
+    <title>POP 07 - Ponto de Estacionamento da Patrulha - Ponto de Estacionamento da Patrulha - SP</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
     <style>
-        body {{ margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }}
-        header {{ background:#1a1a1a; padding:20px; text-align:center; }}
-        h1 {{ margin:0; font-size:2.1rem; }}
-        .back-btn {{ display:inline-block; margin:15px 20px; padding:12px 24px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }}
-        .back-btn:hover {{ background:#555; }}
-        .folium-map {{ width:100%; height:55vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }}
-        .pdf-container {{ margin:25px 15px 40px; background:#1a1a1a; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }}
-        .pdf-header {{ margin:0; padding:15px; background:#222; text-align:center; font-size:1.4rem; color:#eee; }}
-        footer {{ text-align:center; padding:12px; background:#1a1a1a; font-size:0.8rem; color:#888; margin-top:auto; }}
-        .popup-link {{ color: #ff4d4d; font-weight: bold; text-decoration: underline; }}
-        .control-panel {{ background:#1a1a1a; padding:12px; text-align:center; }}
-        .legend {{ margin:10px auto; max-width:600px; font-size:0.9rem; color:#ccc; text-align:center; }}
-        .legend span {{ margin:0 14px; }}
-        .legend .cpp01 {{ color:#FBC02D; }}
-        .legend .cpp02 {{ color:#7CB342; }}
-        .legend .cpp03 {{ color:#01579B; }}
-        .cluster-legend {{ font-size:0.85rem; color:#aaa; margin-top:8px; }}
-        .cluster-legend span {{ display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:4px; vertical-align:middle; }}
+        body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+        header { background:#1a1a1a; padding:20px; text-align:center; }
+        h1 { margin:0; font-size:2.1rem; }
+        .back-btn { display:inline-block; margin:15px 20px; padding:12px 24px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
+        .back-btn:hover { background:#555; }
+        .folium-map { width:100%; height:55vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        .pdf-container { margin:25px 15px 40px; background:#1a1a1a; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        .pdf-header { margin:0; padding:15px; background:#222; text-align:center; font-size:1.4rem; color:#eee; }
+        footer { text-align:center; padding:12px; background:#1a1a1a; font-size:0.8rem; color:#888; margin-top:auto; }
+        .popup-link { color: #ff4d4d; font-weight: bold; text-decoration: underline; }
+        .control-panel { background:#1a1a1a; padding:12px; text-align:center; }
+        .legend { margin:10px auto; max-width:600px; font-size:0.9rem; color:#ccc; text-align:center; }
+        .legend span { margin:0 14px; }
+        .legend .cpp01 { color:#FBC02D; }
+        .legend .cpp02 { color:#7CB342; }
+        .legend .cpp03 { color:#01579B; }
+        .cluster-legend { font-size:0.85rem; color:#aaa; margin-top:8px; }
+        .cluster-legend span { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:4px; vertical-align:middle; }
     </style>
 </head>
 <body>
-    <header><h1>{titulo}</h1></header>
+    <header><h1>POP 07 - Ponto de Estacionamento da Patrulha</h1></header>
     <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
 
     <div class="control-panel">
@@ -83,114 +52,56 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <!-- Visualizador de PDF -->
     <div class="pdf-container">
-        <div class="pdf-header">Documentação - {nome}</div>
+        <div class="pdf-header">Documentação - POP 07</div>
         <iframe 
-            src="../pop_pdf/{nome_arquivo_pdf}" 
+            src="../pop_pdf/pop 07.pdf" 
             width="100%" 
             height="720px" 
             style="border:none; background:#111;"
             allowfullscreen
         ></iframe>
         <div style="padding:12px; text-align:center; font-size:0.9rem; color:#888;">
-            Se o PDF não carregar, <a href="../pop_pdf/{nome_arquivo_pdf}" target="_blank" style="color:#ff6b6b;">clique aqui para abrir diretamente</a>
+            Se o PDF não carregar, <a href="../pop_pdf/pop 07.pdf" target="_blank" style="color:#ff6b6b;">clique aqui para abrir diretamente</a>
         </div>
     </div>
 
     <footer>Operação Batalhão Escola • 2026</footer>
 
     <script>
-        var map = L.map('map_patrulha', {{
-            center: [{lat}, {lng}],
+        var map = L.map('map_patrulha', {
+            center: [-23.52992290273724, -46.728481146900805],
             zoom: 16,
             zoomControl: true
-        }});
+        });
 
-        L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             maxZoom: 19
-        }}).addTo(map);
+        }).addTo(map);
 
-        const cppData = {cpp_data};
-
-        L.geoJSON(cppData, {{
-            style: feature => ({{
-                color: feature.properties.fillColor,
-                weight: 2.5,
-                opacity: 0.85,
-                fillColor: feature.properties.fillColor,
-                fillOpacity: 0.28
-            }}),
-            onEachFeature: (feature, layer) => {{
-                layer.bindPopup(`<b>Área ${{feature.properties.name}}</b>`);
-            }}
-        }}).addTo(map);
-
-        const riscoData = {risco_data};
-
-        const colors = ['#FF1744', '#D500F9', '#2962FF', '#00C853', '#FF6D00', '#FFAB00', '#C51162', '#0091EA', '#64DD17', '#FFD600'];
-
-        riscoData.forEach(item => {{
-            const color = colors[item.id % colors.length];
-            const circle = L.circle([item.lat, item.lng], {{
-                color: color,
-                fillColor: color,
-                fillOpacity: 0.4,
-                radius: 80,
-                weight: 2
-            }}).addTo(map);
-            circle.bindPopup(`
-                <b>Área de Risco ${{item.id}}</b><br>
-                <b>Natureza:</b> ${{item.natureza}}<br>
-                <b>Detalhes:</b> ${{item.detalhe}}<br>
-                <b>QTD de Ocorrências no Período (10SET25 à 31DEZ25):</b> ${{item.count}}<br>
-                <small>(clique fora para fechar)</small>
-            `);
-        }});
-
-        const popIcon = L.AwesomeMarkers.icon({{
-            icon: 'car',
-            markerColor: 'blue',
-            prefix: 'fa',
-            iconColor: 'white'
-        }});
-
-        const ponto = {{
-            lat: {lat},
-            lng: {lng},
-            nome: "{nome}",
-            endereco: "{endereco}"
-        }};
-
-        L.marker([ponto.lat, ponto.lng], {{icon: popIcon}}).addTo(map)
-            .bindPopup(`
-                <b>${{ponto.nome}}</b><br>
-                ${{ponto.endereco}}<br><br>
-                <a href="https://www.google.com/maps/search/?api=1&query=${{ponto.lat}},${{ponto.lng}}" target="_blank" rel="noopener" class="popup-link">
-                    Abrir no Google Maps →
-                </a>
-            `)
-            .openPopup();
-
-        setTimeout(() => map.invalidateSize(), 400);
-        window.addEventListener('resize', () => {{
-            setTimeout(() => map.invalidateSize(), 200);
-        }});
-    </script>
-</body>
-</html>
-"""
-
-# Dados fixos originais (agora incluídos corretamente)
-CPP_DATA = """{
+        const cppData = {
     "type": "FeatureCollection",
     "features": [
         {"type":"Feature","properties":{"name":"CPP-01","fillColor":"#FBC02D"},"geometry":{"type":"Polygon","coordinates":[[[-46.7412559,-23.5180041],[-46.7431222,-23.5181629],[-46.7445164,-23.5185972],[-46.7454387,-23.5193068],[-46.7464038,-23.5206067],[-46.747167,-23.5219729],[-46.7478443,-23.5236145],[-46.7479638,-23.5253348],[-46.7480832,-23.5274879],[-46.7478501,-23.5314007],[-46.747476,-23.5330029],[-46.7465011,-23.5342904],[-46.740155,-23.5399125],[-46.7341064,-23.5452414],[-46.7336367,-23.5449049],[-46.7255717,-23.5374365],[-46.726738,-23.5356636],[-46.7281617,-23.5340482],[-46.7311806,-23.5308959],[-46.7369607,-23.5245126],[-46.7402437,-23.5272473],[-46.7410413,-23.5256378],[-46.7411701,-23.5228047],[-46.7412559,-23.5180041]]]}},
         {"type":"Feature","properties":{"name":"CPP-02","fillColor":"#7CB342"},"geometry":{"type":"Polygon","coordinates":[[[-46.7412559,-23.5180041],[-46.7411701,-23.5228047],[-46.7410413,-23.5256378],[-46.7402437,-23.5272473],[-46.7369607,-23.5244339],[-46.7311806,-23.5308959],[-46.726738,-23.5356636],[-46.7255717,-23.5373578],[-46.7248435,-23.5371399],[-46.7240509,-23.5370205],[-46.7224013,-23.5372143],[-46.7210307,-23.537408],[-46.7204205,-23.5373672],[-46.7199116,-23.5371796],[-46.7194962,-23.536771],[-46.7191237,-23.5362444],[-46.7186034,-23.5359382],[-46.7183191,-23.5346286],[-46.7194028,-23.5314391],[-46.7204543,-23.5269485],[-46.7213556,-23.5248925],[-46.7222568,-23.5213807],[-46.7235227,-23.5196445],[-46.7248423,-23.51856],[-46.7257596,-23.5174274],[-46.726076,-23.5152718],[-46.730976,-23.5178438],[-46.7329578,-23.5183302],[-46.7412559,-23.5180041]]]}},
         {"type":"Feature","properties":{"name":"CPP-03","fillColor":"#01579B"},"geometry":{"type":"Polygon","coordinates":[[[-46.726076,-23.5152718],[-46.7257596,-23.5174274],[-46.7248423,-23.51856],[-46.7235227,-23.5196445],[-46.7222568,-23.5213807],[-46.7213556,-23.5248925],[-46.7204543,-23.5269485],[-46.7195369,-23.5308672],[-46.7183191,-23.5346286],[-46.7186034,-23.5359382],[-46.7191237,-23.5362444],[-46.7143493,-23.5353639],[-46.7130918,-23.5323588],[-46.7128724,-23.5306299],[-46.7132455,-23.5268636],[-46.7135608,-23.5239771],[-46.7134899,-23.5232744],[-46.7130452,-23.5228146],[-46.7125654,-23.5223486],[-46.7122933,-23.5218598],[-46.712168,-23.52134],[-46.7121268,-23.5207948],[-46.7120847,-23.5206107],[-46.7115062,-23.520407],[-46.713534,-23.5141993],[-46.7144727,-23.5111348],[-46.7140623,-23.5105962],[-46.7141529,-23.5099057],[-46.7143936,-23.5093726],[-46.7142313,-23.5090541],[-46.7171172,-23.5088968],[-46.7186327,-23.5089312],[-46.7193368,-23.5091747],[-46.7198906,-23.5095559],[-46.7206698,-23.5102963],[-46.722715,-23.5130829],[-46.726076,-23.5152718]]]}}
     ]
-}"""
+};
 
-RISCO_DATA = """[
+        L.geoJSON(cppData, {
+            style: feature => ({
+                color: feature.properties.fillColor,
+                weight: 2.5,
+                opacity: 0.85,
+                fillColor: feature.properties.fillColor,
+                fillOpacity: 0.28
+            }),
+            onEachFeature: (feature, layer) => {
+                layer.bindPopup(`<b>Área ${feature.properties.name}</b>`);
+            }
+        }).addTo(map);
+
+        const riscoData = [
     {id: 0, lat: -23.523973, lng: -46.716969, natureza: "FURTO", detalhe: "furto de veículo", count: 4},
     {id: 1, lat: -23.519568, lng: -46.720146, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular; roubo documentos; roubo outros; roubo relógio", count: 5},
     {id: 2, lat: -23.521960, lng: -46.716852, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular", count: 5},
@@ -221,55 +132,56 @@ RISCO_DATA = """[
     {id:27, lat: -23.511330, lng: -46.714603, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo dinheiro; roubo medicamentos/farmácia", count: 2},
     {id:28, lat: -23.522874, lng: -46.746400, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo celular; roubo de veículo", count: 4},
     {id:29, lat: -23.523036, lng: -46.721865, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular; roubo outros", count: 2}
-]"""
+];
 
-def gerar_html_para_pop(pop_nome, endereco, lat, lng, output_dir="mapas_pop"):
-    """Gera arquivo HTML com mapa + visualizador de PDF"""
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+        const colors = ['#FF1744', '#D500F9', '#2962FF', '#00C853', '#FF6D00', '#FFAB00', '#C51162', '#0091EA', '#64DD17', '#FFD600'];
 
-    titulo = f"{pop_nome} - Ponto de Estacionamento da Patrulha"
-    
-    # PDF com espaço: "pop 01.pdf", "pop 02.pdf", etc.
-    numero = pop_nome.split()[1]  # "01", "02", ...
-    nome_arquivo_pdf = f"pop {numero}.pdf"
-    
-    # HTML com underline: pop_01.html, pop_02.html...
-    nome_arquivo_html = f"pop_{numero}.html"
-    caminho = os.path.join(output_dir, nome_arquivo_html)
+        riscoData.forEach(item => {
+            const color = colors[item.id % colors.length];
+            const circle = L.circle([item.lat, item.lng], {
+                color: color,
+                fillColor: color,
+                fillOpacity: 0.4,
+                radius: 80,
+                weight: 2
+            }).addTo(map);
+            circle.bindPopup(`
+                <b>Área de Risco ${item.id}</b><br>
+                <b>Natureza:</b> ${item.natureza}<br>
+                <b>Detalhes:</b> ${item.detalhe}<br>
+                <b>QTD de Ocorrências no Período (10SET25 à 31DEZ25):</b> ${item.count}<br>
+                <small>(clique fora para fechar)</small>
+            `);
+        });
 
-    conteudo = HTML_TEMPLATE.format(
-        titulo=titulo,
-        lat=lat,
-        lng=lng,
-        nome=pop_nome,
-        endereco=endereco,
-        cpp_data=CPP_DATA,
-        risco_data=RISCO_DATA,
-        nome_arquivo_pdf=nome_arquivo_pdf
-    )
+        const popIcon = L.AwesomeMarkers.icon({
+            icon: 'car',
+            markerColor: 'blue',
+            prefix: 'fa',
+            iconColor: 'white'
+        });
 
-    with open(caminho, "w", encoding="utf-8") as f:
-        f.write(conteudo)
+        const ponto = {
+            lat: -23.52992290273724,
+            lng: -46.728481146900805,
+            nome: "POP 07",
+            endereco: "R. Carlos Weber, 1129 - Vila Leopoldina, São Paulo - SP, 05303-000"
+        };
 
-    print(f"Gerado: {caminho}  →  PDF esperado: ../pop_pdf/{nome_arquivo_pdf}")
+        L.marker([ponto.lat, ponto.lng], {icon: popIcon}).addTo(map)
+            .bindPopup(`
+                <b>${ponto.nome}</b><br>
+                ${ponto.endereco}<br><br>
+                <a href="https://www.google.com/maps/search/?api=1&query=${ponto.lat},${ponto.lng}" target="_blank" rel="noopener" class="popup-link">
+                    Abrir no Google Maps →
+                </a>
+            `)
+            .openPopup();
 
-
-# =============================================
-# EXECUÇÃO
-# =============================================
-for nome, endereco, lat, lng in pontos:
-    gerar_html_para_pop(nome, endereco, lat, lng)
-
-print("\n" + "="*70)
-print("GERAÇÃO CONCLUÍDA - 17 arquivos HTML criados na pasta 'mapas_pop'")
-print("• Mapas Leaflet funcionando")
-print("• Visualizador de PDF apontando para: 'pop 01.pdf', 'pop 02.pdf', etc.")
-print("\nIMPORTANTE - Para visualizar corretamente (mapa + PDF):")
-print("1. Coloque os PDFs na pasta pop_pdf/ com nomes exatos: pop 01.pdf até pop 17.pdf")
-print("2. Não abra os .html direto do disco (file://)")
-print("3. Na pasta raiz do projeto execute:")
-print("   python -m http.server 8000")
-print("4. Acesse no navegador:")
-print("   http://localhost:8000/mapas_pop/pop_01.html")
-print("="*70)
+        setTimeout(() => map.invalidateSize(), 400);
+        window.addEventListener('resize', () => {
+            setTimeout(() => map.invalidateSize(), 200);
+        });
+    </script>
+</body>
+</html>

@@ -1,289 +1,159 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Patrulha Runner - POP-01</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>POP-01 - Créditos</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            background: #0a0a0a;
-            color: #eee;
-            font-family: Arial, Helvetica, sans-serif;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            touch-action: manipulation; /* melhora toque no mobile */
-        }
-
-        #game-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        canvas {
-            width: 100%;
-            height: auto;
-            max-height: 70vh;           /* evita ficar muito alto em celulares */
-            background: #111;
-            border: 2px solid #333;
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.9);
-            display: block;
-            margin: 0 auto;
-        }
-
-        #score {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: clamp(1.8rem, 5vw, 2.5rem); /* responsivo */
-            font-weight: bold;
-            color: #4fc3f7;
-            text-shadow: 0 0 10px #000;
-            z-index: 10;
-            pointer-events: none;
-        }
-
-        #game-over {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #ff4444;
-            font-size: clamp(2.5rem, 8vw, 4rem);
-            font-weight: bold;
-            text-shadow: 0 0 15px #000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.6s;
-            z-index: 20;
-            padding: 10px;
             box-sizing: border-box;
         }
 
-        #game-over.show {
-            opacity: 1;
-            pointer-events: all;
+        body {
+            height: 100vh;
+            background: #000;
+            color: #ffc107; /* amarelo clássico Star Wars */
+            font-family: "Arial Black", Arial, Helvetica, sans-serif;
+            overflow: hidden;
+            background: radial-gradient(ellipse at bottom, #1a1a2e 0%, #000 100%);
         }
 
-        #game-over button {
-            margin-top: 30px;
-            padding: 16px 50px;
-            font-size: clamp(1.3rem, 5vw, 1.8rem);
-            background: #0288d1;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.2s;
-            touch-action: manipulation;
+        .starwars-container {
+            height: 100vh;
+            perspective: 700px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
         }
 
-        #game-over button:hover,
-        #game-over button:active {
-            background: #0277bd;
+        .starwars-content {
+            position: absolute;
+            bottom: -100%;
+            width: 90%;
+            max-width: 900px;
+            text-align: justify;
+            font-size: clamp(1.1rem, 3.8vw, 2.2rem);
+            line-height: 1.55;
+            letter-spacing: 1.2px;
+            transform-origin: 50% 100%;
+            animation: crawl 80s linear forwards;
+            text-shadow: 
+                0 0 4px #ffc107,
+                0 0 12px #ff9800,
+                0 0 30px #ff5722;
         }
 
-        @media (orientation: landscape) {
-            canvas {
-                max-height: 85vh;
+        .title {
+            font-size: clamp(3.8rem, 12vw, 7rem);
+            text-align: center;
+            margin-bottom: 80px;
+            letter-spacing: 12px;
+            color: #fff;
+            text-shadow: 
+                0 0 20px #fff,
+                0 0 40px #ff9800;
+        }
+
+        .episode {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            text-align: center;
+            margin-bottom: 60px;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+        }
+
+        .credits-line {
+            margin: 18px 0;
+        }
+
+        @keyframes crawl {
+            0% {
+                bottom: -100%;
+                transform: translateZ(0) rotateX(18deg);
             }
+            100% {
+                bottom: 120%;
+                transform: translateZ(-2000px) rotateX(22deg);
+            }
+        }
+
+        /* Fade no topo (efeito clássico) */
+        .fade {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 35%;
+            background: linear-gradient(to bottom, #000 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
 
-<div id="game-container">
-    <div id="score">00000</div>
-    <canvas id="canvas"></canvas>
-    <div id="game-over">
-        FIM DA OPERAÇÃO<br>
-        <span style="font-size: clamp(1.2rem, 4vw, 1.6rem); color:#bbb; margin:20px 0;">
-            Pontuação: <span id="final-score">0</span>
-        </span>
-        <button onclick="location.reload()">Tentar Novamente</button>
+<div class="starwars-container">
+    <div class="fade"></div>
+
+    <div class="starwars-content">
+
+        <div class="title"><br><br><br>OBE <br> <br></div>
+        
+        <div class="episode">Uma operação da <br> 1ª CIA CFS II/25</div>
+
+        
+        <div class="credits-line">AL Sgt PM DANIEL — CMT</div>
+        <div class="credits-line">AL Sgt PM RAFAEL — SUB CMT</div>
+        
+        <div class="credits-line">P1</div>
+        <div class="credits-line">AL Sgt PM GRANATA</div>
+        <div class="credits-line">AL Sgt PM LELIS</div>
+
+        <div class="credits-line">P2</div>
+        <div class="credits-line">AL Sgt PM NASCIMENTO</div>
+        <div class="credits-line">AL Sgt PM LAVEZZO</div>
+        <div class="credits-line">AL Sgt PM CERVANTES</div>
+
+        <div class="credits-line">P3</div>
+        <div class="credits-line">AL Sgt PM MAGALHAES</div>
+        <div class="credits-line">AL Sgt PM FERNANDES</div>
+        <div class="credits-line">AL Sgt PM LIN</div>
+
+        <div class="credits-line">P4</div>
+        <div class="credits-line">AL Sgt PM ZULENE</div>
+        <div class="credits-line">AL Sgt PM MARTINS</div>
+        <div class="credits-line">AL Sgt PM MICHEL FELIX</div>
+
+        <div class="credits-line">P5</div>
+        <div class="credits-line">AL Sgt PM MARTA</div>
+        <div class="credits-line">AL Sgt PM FERNANDA</div>
+
+        <div class="credits-line">Telemática</div>
+        <div class="credits-line">AL Sgt PM TEIXEIRA</div>
+        <div class="credits-line">AL Sgt PM ROMAO</div>
+
+        <div style="height: 120px;"></div>
+        <div class="credits-line" style="text-align:center; font-size:1.4em; opacity:0.9;">
+            A força da lei, a proteção da sociedade, o orgulho de servir.<br> Até a próxima missão...
+        </div>
+
     </div>
 </div>
 
 <script>
-// Patrulha Runner - POP-01 (versão responsiva para mobile vertical)
-
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const scoreEl = document.getElementById('score');
-const gameOverEl = document.getElementById('game-over');
-const finalScoreEl = document.getElementById('final-score');
-
-// Ajusta canvas dinamicamente
-function resizeCanvas() {
-    const container = document.getElementById('game-container');
-    const aspectRatio = 800 / 300; // proporção original
-
-    let width = container.clientWidth;
-    let height = width / aspectRatio;
-
-    // Limita altura máxima em mobile vertical
-    if (height > window.innerHeight * 0.7) {
-        height = window.innerHeight * 0.7;
-        width = height * aspectRatio;
-    }
-
-    canvas.width = width;
-    canvas.height = height;
-
-    // Reajusta groundY e player após resize
-    groundY = canvas.height - 40;
-    player.y = groundY - player.baseHeight;
-    player.x = canvas.width * 0.1; // jogador mais à esquerda em telas pequenas
-}
-
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas(); // inicial
-
-let score = 0;
-let gameSpeed = 5;
-let gravity = 0.6;
-let isGameOver = false;
-let frame = 0;
-
-let groundY = canvas.height - 40;
-
-// Créditos (mantidos em 3 linhas)
-const creditsLine1 = "EQUIPE OBE CFS II/25 • AL Sgt PM DANIEL CMT • AL Sgt PM RAFAEL SUB CMT • AL Sgt PM GRANATA P1 • AL Sgt PM LELIS P1 • ";
-const creditsLine2 = "AL Sgt PM NASCIMENTO P2 • AL Sgt PM LAVEZZO P2 • AL Sgt PM CERVANTES P2 • AL Sgt PM MAGALHAES P3 • AL Sgt PM FERNANDES P3 • AL Sgt PM LIN P3 • ";
-const creditsLine3 = "AL Sgt PM ZULENE P4 • AL Sgt PM MARTINS P4 • AL Sgt PM MICHEL FELIX P4 • AL Sgt PM MARTA P5 • AL Sgt PM FERNANDA P5 • AL Sgt PM TEIXEIRA Telemática • AL Sgt PM ROMAO Telemática • ";
-
-let creditsX = canvas.width;
-
-let player = {
-    x: canvas.width * 0.1,
-    y: groundY - 32,
-    width: 32,
-    baseHeight: 32,
-    duckHeight: 20,
-    dy: 0,
-    jumping: false,
-    ducking: false
-};
-
-// ... (as funções getPlayerHitbox, drawPixelPlayer, createObstacle, drawObstacles, updateObstacles, drawGround permanecem iguais)
-
-function drawCreditsBackground() {
-    ctx.save();
-    ctx.globalAlpha = 0.25;
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold ' + (canvas.width < 500 ? '18px' : '22px') + ' Arial'; // fonte menor em mobile
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    
-    const extraSpace = canvas.width * 3;
-    const lineSpacing = canvas.height * 0.08; // ajusta espaçamento vertical conforme altura
-    
-    ctx.fillText(creditsLine1, creditsX, canvas.height * 0.4);
-    ctx.fillText(creditsLine1, creditsX + extraSpace, canvas.height * 0.4);
-    
-    ctx.fillText(creditsLine2, creditsX, canvas.height * 0.5);
-    ctx.fillText(creditsLine2, creditsX + extraSpace, canvas.height * 0.5);
-    
-    ctx.fillText(creditsLine3, creditsX, canvas.height * 0.6);
-    ctx.fillText(creditsLine3, creditsX + extraSpace, canvas.height * 0.6);
-    
-    ctx.restore();
-}
-
-// Ajuste no update para usar canvas.width/height dinâmicos
-function update() {
-    if (isGameOver) {
-        gameOverEl.classList.add('show');
-        finalScoreEl.textContent = score.toString().padStart(5, '0');
-        return;
-    }
-
-    frame++;
-    if (frame % 3 === 0) score++;
-    scoreEl.textContent = score.toString().padStart(5, '0');
-
-    player.dy += gravity;
-    player.y += player.dy;
-
-    if (player.y > groundY - player.baseHeight) {
-        player.y = groundY - player.baseHeight;
-        player.dy = 0;
-        player.jumping = false;
-    }
-
-    if (score % 1800 === 0) gameSpeed += 0.2;
-
-    if (frame % 140 === 0 || Math.random() < 0.006) {
-        createObstacle();
-    }
-
-    updateObstacles();
-
-    creditsX -= gameSpeed;
-    const textWidth = Math.max(
-        ctx.measureText(creditsLine1).width,
-        ctx.measureText(creditsLine2).width,
-        ctx.measureText(creditsLine3).width
-    );
-    if (creditsX < -textWidth - canvas.width * 2) {
-        creditsX = canvas.width;
-    }
-}
-
-// ... (draw, loop, event listeners permanecem iguais, mas com ajuste no touch/jump)
-
-document.addEventListener('keydown', e => {
-    if (isGameOver) return;
-    if ((e.code === 'Space' || e.code === 'ArrowUp') && !player.jumping) {
-        player.dy = -14;
-        player.jumping = true;
-    }
-    if (e.code === 'ArrowDown') player.ducking = true;
+// Opcional: reinicia a animação ao terminar (loop infinito)
+const content = document.querySelector('.starwars-content');
+content.addEventListener('animationend', () => {
+    content.style.animation = 'none';
+    void content.offsetWidth; // força reflow
+    content.style.animation = 'crawl 80s linear forwards';
 });
-
-document.addEventListener('keyup', e => {
-    if (e.code === 'ArrowDown') player.ducking = false;
-});
-
-// Toque na tela = pular (mais sensível no mobile)
-canvas.addEventListener('touchstart', e => {
-    e.preventDefault();
-    if (!player.jumping && !isGameOver) {
-        player.dy = -14;
-        player.jumping = true;
-    }
-});
-
-// Toque longo = agachar (opcional, mas melhora UX no celular)
-let duckTimer;
-canvas.addEventListener('touchstart', e => {
-    e.preventDefault();
-    duckTimer = setTimeout(() => {
-        player.ducking = true;
-    }, 150); // 150ms para diferenciar pulo de agachar
-});
-
-canvas.addEventListener('touchend', e => {
-    e.preventDefault();
-    clearTimeout(duckTimer);
-    player.ducking = false;
-});
-
-loop();
 </script>
+
 </body>
 </html>
