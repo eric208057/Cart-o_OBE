@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>POP 13 - Ponto de Estacionamento da Patrulha - Ponto de Estacionamento da Patrulha - SP</title>
+    <title>POP 13 - Ponto de Estacionamento da Patrulha</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -14,12 +14,11 @@
         h1 { margin:0; font-size:2.1rem; }
         .back-btn { display:inline-block; margin:15px 20px; padding:12px 24px; background:#333; color:white; border-radius:8px; text-decoration:none; font-weight:bold; }
         .back-btn:hover { background:#555; }
-        .folium-map { width:100%; height:55vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
+        #map_patrulha { width:100%; height:55vh; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
         .pdf-container { margin:25px 15px 40px; background:#1a1a1a; border-radius:12px; overflow:hidden; box-shadow:0 6px 15px rgba(0,0,0,0.8); }
         .pdf-header { margin:0; padding:15px; background:#222; text-align:center; font-size:1.4rem; color:#eee; }
         footer { text-align:center; padding:12px; background:#1a1a1a; font-size:0.8rem; color:#888; margin-top:auto; }
         .popup-link { color: #ff4d4d; font-weight: bold; text-decoration: underline; }
-        .control-panel { background:#1a1a1a; padding:12px; text-align:center; }
         .legend { margin:10px auto; max-width:600px; font-size:0.9rem; color:#ccc; text-align:center; }
         .legend span { margin:0 14px; }
         .legend .cpp01 { color:#FBC02D; }
@@ -33,35 +32,26 @@
     <header><h1>POP 13 - Ponto de Estacionamento da Patrulha</h1></header>
     <a href="../index.html" class="back-btn">← Voltar ao Menu Principal</a>
 
-    <div class="control-panel">
-        <div class="legend">
-            <span class="cpp01">██ CPP-01</span>
-            <span class="cpp02">██ CPP-02</span>
-            <span class="cpp03">██ CPP-03</span>
-        </div>
-        <div class="cluster-legend">
-            Áreas de risco (clique para detalhes):<br>
-            <span style="background:#FF1744;"></span>0 <span style="background:#D500F9;"></span>1 <span style="background:#2962FF;"></span>2
-            <span style="background:#00C853;"></span>3 <span style="background:#FF6D00;"></span>4 <span style="background:#FFAB00;"></span>5
-            <span style="background:#C51162;"></span>6 <span style="background:#0091EA;"></span>7 <span style="background:#64DD17;"></span>8
-            <span style="background:#FFD600;"></span>9+
-        </div>
+    <div class="legend">
+        <span class="cpp01">██ CPP-01</span>
+        <span class="cpp02">██ CPP-02</span>
+        <span class="cpp03">██ CPP-03</span>
     </div>
+    
 
-    <div class="folium-map" id="map_patrulha"></div>
+    <div id="map_patrulha"></div>
 
-    <!-- Visualizador de PDF -->
     <div class="pdf-container">
         <div class="pdf-header">Documentação - POP 13</div>
         <iframe 
-            src="../pop_pdf/pop 13.pdf" 
+            src="https://drive.google.com/file/d/1d-NRwgmYnOKi-8g40IUEfM3XSW2IP0af/preview" 
             width="100%" 
             height="720px" 
             style="border:none; background:#111;"
             allowfullscreen
         ></iframe>
         <div style="padding:12px; text-align:center; font-size:0.9rem; color:#888;">
-            Se o PDF não carregar, <a href="../pop_pdf/pop 13.pdf" target="_blank" style="color:#ff6b6b;">clique aqui para abrir diretamente</a>
+            Se o documento não carregar, <a href="https://drive.google.com/file/d/1d-NRwgmYnOKi-8g40IUEfM3XSW2IP0af/preview" target="_blank" style="color:#ff6b6b;">clique aqui</a>
         </div>
     </div>
 
@@ -79,16 +69,8 @@
             maxZoom: 19
         }).addTo(map);
 
-        const cppData = {
-    "type": "FeatureCollection",
-    "features": [
-        {"type":"Feature","properties":{"name":"CPP-01","fillColor":"#FBC02D"},"geometry":{"type":"Polygon","coordinates":[[[-46.7412559,-23.5180041],[-46.7431222,-23.5181629],[-46.7445164,-23.5185972],[-46.7454387,-23.5193068],[-46.7464038,-23.5206067],[-46.747167,-23.5219729],[-46.7478443,-23.5236145],[-46.7479638,-23.5253348],[-46.7480832,-23.5274879],[-46.7478501,-23.5314007],[-46.747476,-23.5330029],[-46.7465011,-23.5342904],[-46.740155,-23.5399125],[-46.7341064,-23.5452414],[-46.7336367,-23.5449049],[-46.7255717,-23.5374365],[-46.726738,-23.5356636],[-46.7281617,-23.5340482],[-46.7311806,-23.5308959],[-46.7369607,-23.5245126],[-46.7402437,-23.5272473],[-46.7410413,-23.5256378],[-46.7411701,-23.5228047],[-46.7412559,-23.5180041]]]}},
-        {"type":"Feature","properties":{"name":"CPP-02","fillColor":"#7CB342"},"geometry":{"type":"Polygon","coordinates":[[[-46.7412559,-23.5180041],[-46.7411701,-23.5228047],[-46.7410413,-23.5256378],[-46.7402437,-23.5272473],[-46.7369607,-23.5244339],[-46.7311806,-23.5308959],[-46.726738,-23.5356636],[-46.7255717,-23.5373578],[-46.7248435,-23.5371399],[-46.7240509,-23.5370205],[-46.7224013,-23.5372143],[-46.7210307,-23.537408],[-46.7204205,-23.5373672],[-46.7199116,-23.5371796],[-46.7194962,-23.536771],[-46.7191237,-23.5362444],[-46.7186034,-23.5359382],[-46.7183191,-23.5346286],[-46.7194028,-23.5314391],[-46.7204543,-23.5269485],[-46.7213556,-23.5248925],[-46.7222568,-23.5213807],[-46.7235227,-23.5196445],[-46.7248423,-23.51856],[-46.7257596,-23.5174274],[-46.726076,-23.5152718],[-46.730976,-23.5178438],[-46.7329578,-23.5183302],[-46.7412559,-23.5180041]]]}},
-        {"type":"Feature","properties":{"name":"CPP-03","fillColor":"#01579B"},"geometry":{"type":"Polygon","coordinates":[[[-46.726076,-23.5152718],[-46.7257596,-23.5174274],[-46.7248423,-23.51856],[-46.7235227,-23.5196445],[-46.7222568,-23.5213807],[-46.7213556,-23.5248925],[-46.7204543,-23.5269485],[-46.7195369,-23.5308672],[-46.7183191,-23.5346286],[-46.7186034,-23.5359382],[-46.7191237,-23.5362444],[-46.7143493,-23.5353639],[-46.7130918,-23.5323588],[-46.7128724,-23.5306299],[-46.7132455,-23.5268636],[-46.7135608,-23.5239771],[-46.7134899,-23.5232744],[-46.7130452,-23.5228146],[-46.7125654,-23.5223486],[-46.7122933,-23.5218598],[-46.712168,-23.52134],[-46.7121268,-23.5207948],[-46.7120847,-23.5206107],[-46.7115062,-23.520407],[-46.713534,-23.5141993],[-46.7144727,-23.5111348],[-46.7140623,-23.5105962],[-46.7141529,-23.5099057],[-46.7143936,-23.5093726],[-46.7142313,-23.5090541],[-46.7171172,-23.5088968],[-46.7186327,-23.5089312],[-46.7193368,-23.5091747],[-46.7198906,-23.5095559],[-46.7206698,-23.5102963],[-46.722715,-23.5130829],[-46.726076,-23.5152718]]]}}
-    ]
-};
-
-        L.geoJSON(cppData, {
+        // Camada CPP
+        L.geoJSON({"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"name": "CPP-01", "fillColor": "#FBC02D"}, "geometry": {"type": "Polygon", "coordinates": [[[-46.7412559, -23.5180041], [-46.7431222, -23.5181629], [-46.7445164, -23.5185972], [-46.7454387, -23.5193068], [-46.7464038, -23.5206067], [-46.747167, -23.5219729], [-46.7478443, -23.5236145], [-46.7479638, -23.5253348], [-46.7480832, -23.5274879], [-46.7478501, -23.5314007], [-46.747476, -23.5330029], [-46.7465011, -23.5342904], [-46.740155, -23.5399125], [-46.7341064, -23.5452414], [-46.7336367, -23.5449049], [-46.7255717, -23.5374365], [-46.726738, -23.5356636], [-46.7281617, -23.5340482], [-46.7311806, -23.5308959], [-46.7369607, -23.5245126], [-46.7402437, -23.5272473], [-46.7410413, -23.5256378], [-46.7411701, -23.5228047], [-46.7412559, -23.5180041]]]}}, {"type": "Feature", "properties": {"name": "CPP-02", "fillColor": "#7CB342"}, "geometry": {"type": "Polygon", "coordinates": [[[-46.7412559, -23.5180041], [-46.7411701, -23.5228047], [-46.7410413, -23.5256378], [-46.7402437, -23.5272473], [-46.7369607, -23.5244339], [-46.7311806, -23.5308959], [-46.726738, -23.5356636], [-46.7255717, -23.5373578], [-46.7248435, -23.5371399], [-46.7240509, -23.5370205], [-46.7224013, -23.5372143], [-46.7210307, -23.537408], [-46.7204205, -23.5373672], [-46.7199116, -23.5371796], [-46.7194962, -23.536771], [-46.7191237, -23.5362444], [-46.7186034, -23.5359382], [-46.7183191, -23.5346286], [-46.7194028, -23.5314391], [-46.7204543, -23.5269485], [-46.7213556, -23.5248925], [-46.7222568, -23.5213807], [-46.7235227, -23.5196445], [-46.7248423, -23.51856], [-46.7257596, -23.5174274], [-46.726076, -23.5152718], [-46.730976, -23.5178438], [-46.7329578, -23.5183302], [-46.7412559, -23.5180041]]]}}, {"type": "Feature", "properties": {"name": "CPP-03", "fillColor": "#01579B"}, "geometry": {"type": "Polygon", "coordinates": [[[-46.726076, -23.5152718], [-46.7257596, -23.5174274], [-46.7248423, -23.51856], [-46.7235227, -23.5196445], [-46.7222568, -23.5213807], [-46.7213556, -23.5248925], [-46.7204543, -23.5269485], [-46.7195369, -23.5308672], [-46.7183191, -23.5346286], [-46.7186034, -23.5359382], [-46.7191237, -23.5362444], [-46.7143493, -23.5353639], [-46.7130918, -23.5323588], [-46.7128724, -23.5306299], [-46.7132455, -23.5268636], [-46.7135608, -23.5239771], [-46.7134899, -23.5232744], [-46.7130452, -23.5228146], [-46.7125654, -23.5223486], [-46.7122933, -23.5218598], [-46.712168, -23.52134], [-46.7121268, -23.5207948], [-46.7120847, -23.5206107], [-46.7115062, -23.520407], [-46.713534, -23.5141993], [-46.7144727, -23.5111348], [-46.7140623, -23.5105962], [-46.7141529, -23.5099057], [-46.7143936, -23.5093726], [-46.7142313, -23.5090541], [-46.7171172, -23.5088968], [-46.7186327, -23.5089312], [-46.7193368, -23.5091747], [-46.7198906, -23.5095559], [-46.7206698, -23.5102963], [-46.722715, -23.5130829], [-46.726076, -23.5152718]]]}}]}, {
             style: feature => ({
                 color: feature.properties.fillColor,
                 weight: 2.5,
@@ -101,59 +83,28 @@
             }
         }).addTo(map);
 
-        const riscoData = [
-    {id: 0, lat: -23.523973, lng: -46.716969, natureza: "FURTO", detalhe: "furto de veículo", count: 4},
-    {id: 1, lat: -23.519568, lng: -46.720146, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular; roubo documentos; roubo outros; roubo relógio", count: 5},
-    {id: 2, lat: -23.521960, lng: -46.716852, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular", count: 5},
-    {id: 3, lat: -23.524955, lng: -46.735198, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular; roubo dinheiro; roubo medicamentos/farmácia; roubo outros", count: 6},
-    {id: 4, lat: -23.540914, lng: -46.729964, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo aliança; roubo bicicleta; roubo celular; roubo outros", count: 2},
-    {id: 5, lat: -23.533096, lng: -46.742971, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular", count: 5},
-    {id: 6, lat: -23.527249, lng: -46.740196, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo celular; roubo cofre; roubo de veículo", count: 2},
-    {id: 7, lat: -23.534108, lng: -46.727640, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo aliança; roubo celular; roubo colar; roubo de veículo; roubo outros; roubo relógio", count: 4},
-    {id: 8, lat: -23.516049, lng: -46.722506, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo bilhete único; roubo cartão de crédito; roubo celular; roubo dinheiro; roubo documentos; roubo outros", count: 2},
-    {id: 9, lat: -23.531221, lng: -46.739128, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo celular; roubo de veículo; roubo dinheiro; roubo outros", count: 5},
-    {id:10, lat: -23.516687, lng: -46.726425, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo celular; roubo de veículo; roubo outros", count: 5},
-    {id:11, lat: -23.520463, lng: -46.729018, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular", count: 2},
-    {id:12, lat: -23.514399, lng: -46.713637, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo cartão de crédito; roubo celular", count: 5},
-    {id:13, lat: -23.523493, lng: -46.719350, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo aliança; roubo cartão bancário; roubo cartão de crédito; roubo celular; roubo dinheiro; roubo documentos; roubo outros", count: 2},
-    {id:14, lat: -23.529894, lng: -46.735817, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo celular; roubo de veículo; roubo dinheiro; roubo documentos; roubo outros", count: 7},
-    {id:15, lat: -23.520307, lng: -46.725704, natureza: "FURTO", detalhe: "furto de veículo", count: 2},
-    {id:16, lat: -23.520805, lng: -46.744593, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo anel; roubo celular; roubo de veículo", count: 5},
-    {id:17, lat: -23.543778, lng: -46.732397, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo aliança; roubo bicicleta; roubo celular", count: 2},
-    {id:18, lat: -23.534608, lng: -46.731151, natureza: "FURTO", detalhe: "furto de veículo", count: 5},
-    {id:19, lat: -23.513843, lng: -46.722584, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo de veículo", count: 4},
-    {id:20, lat: -23.517413, lng: -46.718008, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo outros", count: 4},
-    {id:21, lat: -23.531938, lng: -46.724173, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo aliança; roubo celular; roubo de veículo", count: 2},
-    {id:22, lat: -23.530150, lng: -46.731640, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular", count: 2},
-    {id:23, lat: -23.519374, lng: -46.724139, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo celular; roubo de veículo; roubo outros", count: 2},
-    {id:24, lat: -23.525765, lng: -46.732081, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo aliança; roubo outros", count: 2},
-    {id:25, lat: -23.532399, lng: -46.733567, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo de veículo", count: 2},
-    {id:26, lat: -23.537573, lng: -46.729609, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular; roubo documentos; roubo outros", count: 4},
-    {id:27, lat: -23.511330, lng: -46.714603, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo dinheiro; roubo medicamentos/farmácia", count: 2},
-    {id:28, lat: -23.522874, lng: -46.746400, natureza: "Misto (furto/roubo)", detalhe: "Mista: furto de veículo; roubo celular; roubo de veículo", count: 4},
-    {id:29, lat: -23.523036, lng: -46.721865, natureza: "FURTO", detalhe: "Mista: furto de veículo; roubo celular; roubo outros", count: 2}
-];
-
-        const colors = ['#FF1744', '#D500F9', '#2962FF', '#00C853', '#FF6D00', '#FFAB00', '#C51162', '#0091EA', '#64DD17', '#FFD600'];
+        // Áreas de RISCO
+        const riscoData = [{"id": 0, "lat": -23.523973, "lng": -46.716969, "natureza": "FURTO", "detalhe": "furto de veículo", "count": 4}, {"id": 1, "lat": -23.519568, "lng": -46.720146, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular; roubo documentos; roubo outros; roubo relógio", "count": 5}, {"id": 2, "lat": -23.52196, "lng": -46.716852, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular", "count": 5}, {"id": 3, "lat": -23.524955, "lng": -46.735198, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular; roubo dinheiro; roubo medicamentos/farmácia; roubo outros", "count": 6}, {"id": 4, "lat": -23.540914, "lng": -46.729964, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo aliança; roubo bicicleta; roubo celular; roubo outros", "count": 2}, {"id": 5, "lat": -23.533096, "lng": -46.742971, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular", "count": 5}, {"id": 6, "lat": -23.527249, "lng": -46.740196, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo cofre; roubo de veículo", "count": 2}, {"id": 7, "lat": -23.534108, "lng": -46.72764, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo aliança; roubo celular; roubo colar; roubo de veículo; roubo outros; roubo relógio", "count": 4}, {"id": 8, "lat": -23.516049, "lng": -46.722506, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo bilhete único; roubo cartão de crédito; roubo celular; roubo dinheiro; roubo documentos; roubo outros", "count": 2}, {"id": 9, "lat": -23.531221, "lng": -46.739128, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo; roubo dinheiro; roubo outros", "count": 5}, {"id": 10, "lat": -23.516687, "lng": -46.726425, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo; roubo outros", "count": 5}, {"id": 11, "lat": -23.520463, "lng": -46.729018, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular", "count": 2}, {"id": 12, "lat": -23.514399, "lng": -46.713637, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo cartão de crédito; roubo celular", "count": 5}, {"id": 13, "lat": -23.523493, "lng": -46.71935, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo aliança; roubo cartão bancário; roubo cartão de crédito; roubo celular; roubo dinheiro; roubo documentos; roubo outros", "count": 2}, {"id": 14, "lat": -23.529894, "lng": -46.735817, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo; roubo dinheiro; roubo documentos; roubo outros", "count": 7}, {"id": 15, "lat": -23.520307, "lng": -46.725704, "natureza": "FURTO", "detalhe": "furto de veículo", "count": 2}, {"id": 16, "lat": -23.520805, "lng": -46.744593, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo anel; roubo celular; roubo de veículo", "count": 5}, {"id": 17, "lat": -23.543778, "lng": -46.732397, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo aliança; roubo bicicleta; roubo celular", "count": 2}, {"id": 18, "lat": -23.534608, "lng": -46.731151, "natureza": "FURTO", "detalhe": "furto de veículo", "count": 5}, {"id": 19, "lat": -23.513843, "lng": -46.722584, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo de veículo", "count": 4}, {"id": 20, "lat": -23.517413, "lng": -46.718008, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo outros", "count": 4}, {"id": 21, "lat": -23.531938, "lng": -46.724173, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo aliança; roubo celular; roubo de veículo", "count": 2}, {"id": 22, "lat": -23.53015, "lng": -46.73164, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular", "count": 2}, {"id": 23, "lat": -23.519374, "lng": -46.724139, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo; roubo outros", "count": 2}, {"id": 24, "lat": -23.525765, "lng": -46.732081, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo aliança; roubo outros", "count": 2}, {"id": 25, "lat": -23.532399, "lng": -46.733567, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo de veículo", "count": 2}, {"id": 26, "lat": -23.537573, "lng": -46.729609, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular; roubo documentos; roubo outros", "count": 4}, {"id": 27, "lat": -23.51133, "lng": -46.714603, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo dinheiro; roubo medicamentos/farmácia", "count": 2}, {"id": 28, "lat": -23.522874, "lng": -46.7464, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo", "count": 4}, {"id": 29, "lat": -23.523036, "lng": -46.721865, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular; roubo outros", "count": 2}];
+        const colors = ['#FF1744','#D500F9','#2962FF','#00C853','#FF6D00','#FFAB00','#C51162','#0091EA','#64DD17','#FFD600'];
 
         riscoData.forEach(item => {
             const color = colors[item.id % colors.length];
-            const circle = L.circle([item.lat, item.lng], {
+            L.circle([item.lat, item.lng], {
                 color: color,
                 fillColor: color,
                 fillOpacity: 0.4,
                 radius: 80,
                 weight: 2
-            }).addTo(map);
-            circle.bindPopup(`
+            }).addTo(map)
+            .bindPopup(`
                 <b>Área de Risco ${item.id}</b><br>
                 <b>Natureza:</b> ${item.natureza}<br>
                 <b>Detalhes:</b> ${item.detalhe}<br>
-                <b>QTD de Ocorrências no Período (10SET25 à 31DEZ25):</b> ${item.count}<br>
-                <small>(clique fora para fechar)</small>
+                <b>QTD Ocorrências (10/SET/25 à 31/DEZ/25):</b> ${item.count}
             `);
         });
 
+        // Marcador do POP atual
         const popIcon = L.AwesomeMarkers.icon({
             icon: 'car',
             markerColor: 'blue',
@@ -161,27 +112,19 @@
             iconColor: 'white'
         });
 
-        const ponto = {
-            lat: -23.533084170765385,
-            lng: -46.72661811978115,
-            nome: "POP 13",
-            endereco: "R. Brentano, 435 - Vila Leopoldina, São Paulo - SP, 05302-041"
-        };
-
-        L.marker([ponto.lat, ponto.lng], {icon: popIcon}).addTo(map)
+        L.marker([-23.533084170765385, -46.72661811978115], {icon: popIcon})
+            .addTo(map)
             .bindPopup(`
-                <b>${ponto.nome}</b><br>
-                ${ponto.endereco}<br><br>
-                <a href="https://www.google.com/maps/search/?api=1&query=${ponto.lat},${ponto.lng}" target="_blank" rel="noopener" class="popup-link">
+                <b>POP 13</b><br>
+                R. Brentano, 435 - Vila Leopoldina, São Paulo - SP, 05302-041<br><br>
+                <a href="https://www.google.com/maps/search/?api=1&query=-23.533084170765385,-46.72661811978115" target="_blank" class="popup-link">
                     Abrir no Google Maps →
                 </a>
             `)
             .openPopup();
 
         setTimeout(() => map.invalidateSize(), 400);
-        window.addEventListener('resize', () => {
-            setTimeout(() => map.invalidateSize(), 200);
-        });
+        window.addEventListener('resize', () => setTimeout(() => map.invalidateSize(), 200));
     </script>
 </body>
 </html>
