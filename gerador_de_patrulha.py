@@ -3,7 +3,7 @@ import json
 import os
 
 # -------------------------------------------------------------------------
-# Dados das 4 viaturas (baseados nos seus pontos reais)
+# Dados das viaturas (mantidos originais)
 # -------------------------------------------------------------------------
 viaturas = [
     {
@@ -52,9 +52,9 @@ viaturas = [
 ]
 
 # -------------------------------------------------------------------------
-# Polígonos CPP (mantidos exatamente como no seu modelo)
+# GeoJSON das CPPs
 # -------------------------------------------------------------------------
-cpp_geojson = {
+CPP_GEOJSON = {
     "type": "FeatureCollection",
     "features": [
         {"type":"Feature","properties":{"name":"CPP-01","fillColor":"#FBC02D"},"geometry":{"type":"Polygon","coordinates":[[[-46.7412559,-23.5180041],[-46.7431222,-23.5181629],[-46.7445164,-23.5185972],[-46.7454387,-23.5193068],[-46.7464038,-23.5206067],[-46.747167,-23.5219729],[-46.7478443,-23.5236145],[-46.7479638,-23.5253348],[-46.7480832,-23.5274879],[-46.7478501,-23.5314007],[-46.747476,-23.5330029],[-46.7465011,-23.5342904],[-46.740155,-23.5399125],[-46.7341064,-23.5452414],[-46.7336367,-23.5449049],[-46.7255717,-23.5374365],[-46.726738,-23.5356636],[-46.7281617,-23.5340482],[-46.7311806,-23.5308959],[-46.7369607,-23.5245126],[-46.7402437,-23.5272473],[-46.7410413,-23.5256378],[-46.7411701,-23.5228047],[-46.7412559,-23.5180041]]]}},
@@ -64,7 +64,43 @@ cpp_geojson = {
 }
 
 # -------------------------------------------------------------------------
-# Template HTML atualizado (dois PDFs: principal + Operação Bloqueio)
+# Áreas de risco – CORRIGIDO (todas chaves com aspas)
+# -------------------------------------------------------------------------
+RISCO_DATA = [
+    {"id": 0, "lat": -23.523973, "lng": -46.716969, "natureza": "FURTO", "detalhe": "furto de veículo", "count": 4},
+    {"id": 1, "lat": -23.519568, "lng": -46.720146, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular; roubo documentos; roubo outros; roubo relógio", "count": 5},
+    {"id": 2, "lat": -23.521960, "lng": -46.716852, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular", "count": 5},
+    {"id": 3, "lat": -23.524955, "lng": -46.735198, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular; roubo dinheiro; roubo medicamentos/farmácia; roubo outros", "count": 6},
+    {"id": 4, "lat": -23.540914, "lng": -46.729964, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo aliança; roubo bicicleta; roubo celular; roubo outros", "count": 2},
+    {"id": 5, "lat": -23.533096, "lng": -46.742971, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular", "count": 5},
+    {"id": 6, "lat": -23.527249, "lng": -46.740196, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo cofre; roubo de veículo", "count": 2},
+    {"id": 7, "lat": -23.534108, "lng": -46.727640, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo aliança; roubo celular; roubo colar; roubo de veículo; roubo outros; roubo relógio", "count": 4},
+    {"id": 8, "lat": -23.516049, "lng": -46.722506, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo bilhete único; roubo cartão de crédito; roubo celular; roubo dinheiro; roubo documentos; roubo outros", "count": 2},
+    {"id": 9, "lat": -23.531221, "lng": -46.739128, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo; roubo dinheiro; roubo outros", "count": 5},
+    {"id": 10, "lat": -23.516687, "lng": -46.726425, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo; roubo outros", "count": 5},
+    {"id": 11, "lat": -23.520463, "lng": -46.729018, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular", "count": 2},
+    {"id": 12, "lat": -23.514399, "lng": -46.713637, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo cartão de crédito; roubo celular", "count": 5},
+    {"id": 13, "lat": -23.523493, "lng": -46.719350, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo aliança; roubo cartão bancário; roubo cartão de crédito; roubo celular; roubo dinheiro; roubo documentos; roubo outros", "count": 2},
+    {"id": 14, "lat": -23.529894, "lng": -46.735817, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo; roubo dinheiro; roubo documentos; roubo outros", "count": 7},
+    {"id": 15, "lat": -23.520307, "lng": -46.725704, "natureza": "FURTO", "detalhe": "furto de veículo", "count": 2},
+    {"id": 16, "lat": -23.520805, "lng": -46.744593, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo anel; roubo celular; roubo de veículo", "count": 5},
+    {"id": 17, "lat": -23.543778, "lng": -46.732397, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo aliança; roubo bicicleta; roubo celular", "count": 2},
+    {"id": 18, "lat": -23.534608, "lng": -46.731151, "natureza": "FURTO", "detalhe": "furto de veículo", "count": 5},
+    {"id": 19, "lat": -23.513843, "lng": -46.722584, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo de veículo", "count": 4},
+    {"id": 20, "lat": -23.517413, "lng": -46.718008, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo outros", "count": 4},
+    {"id": 21, "lat": -23.531938, "lng": -46.724173, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo aliança; roubo celular; roubo de veículo", "count": 2},
+    {"id": 22, "lat": -23.530150, "lng": -46.731640, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular", "count": 2},
+    {"id": 23, "lat": -23.519374, "lng": -46.724139, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo; roubo outros", "count": 2},
+    {"id": 24, "lat": -23.525765, "lng": -46.732081, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo aliança; roubo outros", "count": 2},
+    {"id": 25, "lat": -23.532399, "lng": -46.733567, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo de veículo", "count": 2},
+    {"id": 26, "lat": -23.537573, "lng": -46.729609, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular; roubo documentos; roubo outros", "count": 4},
+    {"id": 27, "lat": -23.511330, "lng": -46.714603, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo dinheiro; roubo medicamentos/farmácia", "count": 2},
+    {"id": 28, "lat": -23.522874, "lng": -46.746400, "natureza": "Misto (furto/roubo)", "detalhe": "Mista: furto de veículo; roubo celular; roubo de veículo", "count": 4},
+    {"id": 29, "lat": -23.523036, "lng": -46.721865, "natureza": "FURTO", "detalhe": "Mista: furto de veículo; roubo celular; roubo outros", "count": 2}
+]
+
+# -------------------------------------------------------------------------
+# Template HTML (mantido exatamente como você enviou – está correto)
 # -------------------------------------------------------------------------
 html_template = """<!DOCTYPE html>
 <html lang="pt-BR">
@@ -92,16 +128,18 @@ html_template = """<!DOCTYPE html>
         .point-btn {{ margin:6px 4px; padding:12px 20px; background:#333; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; transition: all 0.2s; min-width:120px; }}
         .point-btn:hover {{ background:#555; }}
         .point-btn.active {{ background:#0066cc; }}
-        .legend {{ margin:12px auto; max-width:700px; font-size:0.95rem; color:#ccc; text-align:center; }}
+        .legend {{ margin:10px auto; max-width:700px; font-size:0.95rem; color:#ccc; text-align:center; }}
         .legend span {{ margin:0 16px; }}
         .legend .cpp01 {{ color:#FBC02D; }}
         .legend .cpp02 {{ color:#7CB342; }}
         .legend .cpp03 {{ color:#01579B; }}
+        .cluster-legend {{ font-size:0.85rem; color:#aaa; margin-top:12px; text-align:center; }}
+        .cluster-legend span {{ display:inline-block; width:14px; height:14px; border-radius:50%; margin:0 3px; vertical-align:middle; }}
     </style>
 </head>
 <body>
     <header><h1>{titulo}</h1></header>
-    <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+    <a href="../index.html" class="back-btn">← Voltar ao Menu Principal</a>
 
     <div class="control-panel">
         {botoes_html}
@@ -110,37 +148,31 @@ html_template = """<!DOCTYPE html>
             <span class="cpp02">██ CPP-02</span>
             <span class="cpp03">██ CPP-03</span>
         </div>
+        <div class="cluster-legend">
+            Áreas de maior risco (últimos meses):<br>
+            <span style="background:#FF1744;"></span>0 <span style="background:#D500F9;"></span>1 <span style="background:#2962FF;"></span>2
+            <span style="background:#00C853;"></span>3 <span style="background:#FF6D00;"></span>4 <span style="background:#FFAB00;"></span>5
+            <span style="background:#C51162;"></span>6 <span style="background:#0091EA;"></span>7 <span style="background:#64DD17;"></span>8
+            <span style="background:#FFD600;"></span>9+
+        </div>
     </div>
 
     <div class="folium-map" id="mapa"></div>
 
-    <!-- Seção de Documentação - Dois PDFs -->
     <div class="pdf-section">
         <div class="pdf-header">Documentação da Viatura - {codigo}</div>
         
         <div class="pdf-container">
-            <h3 style="margin:0; padding:10px; background:#333; text-align:center; font-size:1.2rem;">Plano Geral da Viatura</h3>
-            <iframe 
-                src="../vtr_pdf/{pdf_principal}" 
-                width="100%" 
-                height="720px" 
-                style="border:none; background:#111;"
-                allowfullscreen
-            ></iframe>
+            <h3 style="margin:0; padding:10px; background:#333; text-align:center;">Plano Geral da Viatura</h3>
+            <iframe src="../vtr_pdf/{pdf_principal}" width="100%" height="720px" style="border:none; background:#111;" allowfullscreen></iframe>
             <div style="padding:10px; text-align:center; font-size:0.9rem; color:#888;">
                 <a href="../vtr_pdf/{pdf_principal}" target="_blank" style="color:#ff6b6b;">Abrir em nova aba</a>
             </div>
         </div>
 
         <div class="pdf-container">
-            <h3 style="margin:0; padding:10px; background:#333; text-align:center; font-size:1.2rem;">Operação Bloqueio</h3>
-            <iframe 
-                src="../vtr_pdf/Operação Bloqueio.pdf" 
-                width="100%" 
-                height="720px" 
-                style="border:none; background:#111;"
-                allowfullscreen
-            ></iframe>
+            <h3 style="margin:0; padding:10px; background:#333; text-align:center;">Operação Bloqueio</h3>
+            <iframe src="../vtr_pdf/Operação Bloqueio.pdf" width="100%" height="720px" style="border:none; background:#111;" allowfullscreen></iframe>
             <div style="padding:10px; text-align:center; font-size:0.9rem; color:#888;">
                 <a href="../vtr_pdf/Operação Bloqueio.pdf" target="_blank" style="color:#ff6b6b;">Abrir em nova aba</a>
             </div>
@@ -161,8 +193,8 @@ html_template = """<!DOCTYPE html>
             maxZoom: 19
         }}).addTo(map);
 
+        // Camada CPPs
         const cppData = {cpp_geojson_json};
-
         L.geoJSON(cppData, {{
             style: feature => ({{
                 color: feature.properties.fillColor,
@@ -176,6 +208,30 @@ html_template = """<!DOCTYPE html>
             }}
         }}).addTo(map);
 
+        // Áreas de RISCO
+        const riscoData = {risco_data_json};
+        const riscoColors = ['#FF1744','#D500F9','#2962FF','#00C853','#FF6D00','#FFAB00','#C51162','#0091EA','#64DD17','#FFD600'];
+
+        riscoData.forEach(item => {{
+            const cor = riscoColors[item.id % riscoColors.length];
+            const circle = L.circle([item.lat, item.lng], {{
+                color: cor,
+                fillColor: cor,
+                fillOpacity: 0.38,
+                radius: 90,
+                weight: 2
+            }}).addTo(map);
+
+            circle.bindPopup(`
+                <b>Área de Risco #${{item.id}}</b><br>
+                <b>Natureza:</b> ${{item.natureza}}<br>
+                <b>Detalhes:</b> ${{item.detalhe}}<br>
+                <b>Ocorrências:</b> ${{item.count}}<br>
+                <small>(período de referência: set/25 a dez/25)</small>
+            `);
+        }});
+
+        // Ícones dos pontos da viatura
         const icons = {{
             'OP BLOQUEIO': L.AwesomeMarkers.icon({{icon: 'ban', markerColor: 'red', prefix: 'fa', iconColor: 'white'}}),
             'default': L.AwesomeMarkers.icon({{icon: 'car', markerColor: 'blue', prefix: 'fa', iconColor: 'white'}})
@@ -209,12 +265,12 @@ html_template = """<!DOCTYPE html>
             }}
         }}
 
-        // Abre o OP BLOQUEIO por padrão
+        // Abre o ponto "OP BLOQUEIO" por padrão
         setTimeout(() => {{
             const opBloqueioId = Object.keys(marcadores).find(id => id === 'OP BLOQUEIO');
             if (opBloqueioId) centralizar(opBloqueioId);
             map.invalidateSize();
-        }}, 300);
+        }}, 400);
 
         window.addEventListener('resize', () => setTimeout(() => map.invalidateSize(), 200));
     </script>
@@ -226,8 +282,7 @@ html_template = """<!DOCTYPE html>
 # Geração dos arquivos
 # -------------------------------------------------------------------------
 output_dir = "mapas_vtr"
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
+os.makedirs(output_dir, exist_ok=True)
 
 for vtr in viaturas:
     botoes = []
@@ -239,8 +294,9 @@ for vtr in viaturas:
     conteudo = html_template.format(
         titulo=vtr["titulo"],
         codigo=vtr["codigo"],
-        botoes_html="\n        ".join(botoes),
-        cpp_geojson_json=json.dumps(cpp_geojson, ensure_ascii=False),
+        botoes_html="\n            ".join(botoes),
+        cpp_geojson_json=json.dumps(CPP_GEOJSON, ensure_ascii=False),
+        risco_data_json=json.dumps(RISCO_DATA, ensure_ascii=False),
         pontos_json=json.dumps(vtr["pontos"], ensure_ascii=False),
         pdf_principal=vtr["pdf_principal"]
     )
@@ -252,18 +308,14 @@ for vtr in viaturas:
         f.write(conteudo)
 
     print(f"Gerado: {caminho}  ({len(vtr['pontos'])} pontos)")
-    print(f"   → PDFs esperados: ../vtr_pdf/{vtr['pdf_principal']}")
-    print(f"   → e ../vtr_pdf/Operação Bloqueio.pdf")
 
 print("\n" + "="*90)
 print("GERAÇÃO CONCLUÍDA")
 print("• Arquivos HTML criados na pasta mapas_vtr/")
-print("• Cada página agora exibe DOIS PDFs:")
-print("  1. O PDF principal da viatura (ex: ESSgt-030.pdf)")
-print("  2. O PDF fixo 'Operação Bloqueio.pdf'")
+print("• Áreas de risco agora corretamente formatadas")
+print("• Botão Voltar → ../index.html")
+print("• Dois PDFs por página (viatura + Operação Bloqueio)")
 print("\nPara testar:")
-print("  Execute na pasta raiz do projeto:")
-print("    python -m http.server 8000")
-print("  Acesse exemplo:")
-print("    http://localhost:8000/mapas_vtr/essgt_030.html")
+print("  python -m http.server 8000   (na pasta raiz do projeto)")
+print("  Acesse: http://localhost:8000/mapas_vtr/essgt_030.html")
 print("="*90)

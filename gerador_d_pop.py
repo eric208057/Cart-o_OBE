@@ -62,7 +62,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
     <header><h1>{titulo}</h1></header>
-    <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+    <a href="../index.html" class="back-btn">← Voltar ao Menu Principal</a>
 
     <div class="control-panel">
         <div class="legend">
