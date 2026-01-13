@@ -64,8 +64,8 @@
         });
 
         var gasIcon = L.AwesomeMarkers.icon({
-            icon: 'tint',              // gota (combustível)
-            markerColor: 'darkpurple', // ou: 'purple', 'pink', 'cadetblue'
+            icon: 'tint',
+            markerColor: 'darkpurple',
             prefix: 'fa'
         });
 
@@ -73,7 +73,6 @@
         const cppData = {
             "type": "FeatureCollection",
             "features": [
-                // ... (mantive exatamente como estava - seus 3 polígonos CPP)
                 {
                     "type": "Feature",
                     "properties": { "name": "CPP-01", "fillColor": "#FBC02D" },
@@ -114,36 +113,34 @@
             }
         }).addTo(map);
 
- 
-
-        // PONTOS DE ABASTECIMENTO - NOVO!
+        // PONTOS DE ABASTECIMENTO COM LINK PARA GOOGLE MAPS
         const abastecimento = [
             {
-                nome: "Posto Ipiranga",
+                nome: "Posto Ipiranga - Portal Imperatriz",
                 endereco: "Av. Imperatriz Leopoldina, 1389 - Vila Leopoldina, São Paulo - SP, 05305-012",
                 lat: -23.53171236817675,
                 lng: -46.72999462183083
             },
             {
-                nome: "Posto Shell",
+                nome: "Posto Shell - Jaguare",
                 endereco: "R. Schilling, 257 - Vila Hamburguesa, São Paulo - SP, 05302-003",
                 lat: -23.529765755116273,
                 lng: -46.727224990024176
             },
             {
-                nome: "Posto Ipiranga",
+                nome: "Posto Ipiranga - Ilhas do Hawai",
                 endereco: "Av. Imperatriz Leopoldina, 1864 - Vila Leopoldina, São Paulo - SP, 05305-003",
                 lat: -23.5366948584166,
                 lng: -46.72620465704106
             },
             {
-                nome: "Posto Shell",
+                nome: "Posto Shell - Rio do Ouro",
                 endereco: "R. Guaipá, 1333 - Vila Leopoldina, São Paulo - SP, 05089-001",
                 lat: -23.522185986588447,
                 lng: -46.734789049886125
             },
             {
-                nome: "Posto Shell",
+                nome: "Posto Shell - Martinelli",
                 endereco: "R. Barão de Jundiaí, 420 - Lapa, São Paulo - SP, 05073-010",
                 lat: -23.524615295955158,
                 lng: -46.70859977442769
@@ -157,11 +154,16 @@
         ];
 
         abastecimento.forEach(post => {
+            const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${post.lat},${post.lng}+${encodeURIComponent(post.nome)}`;
+
             L.marker([post.lat, post.lng], {icon: gasIcon}).addTo(map)
                 .bindPopup(`
                     <b>${post.nome}</b><br>
                     ${post.endereco}<br><br>
-                    <span style="color:#aaa; font-size:0.9em;">Ponto de Abastecimento</span>
+                    <span style="color:#aaa; font-size:0.9em;">Ponto de Abastecimento</span><br><br>
+                    <a href="${googleMapsLink}" target="_blank" rel="noopener" class="popup-link">
+                        Abrir no Google Maps →
+                    </a>
                 `);
         });
 
