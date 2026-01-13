@@ -6,8 +6,7 @@
     <title>Mapa Força - Sistema OBE</title>
     <style>
         body { 
-            margin:0; 
-            padding:0; 
+            margin:0; padding:0; 
             font-family:Arial, sans-serif; 
             background:#000; 
             color:#fff; 
@@ -22,15 +21,11 @@
             border-bottom:2px solid #333; 
             position: relative;
         }
-        h1 { 
-            margin:0; 
-            font-size:2.4rem; 
-        }
+        h1 { margin:0; font-size:2.4rem; }
         .back-btn { 
             position: absolute;
             left: 20px;
             top: 20px;
-            display: inline-block;
             padding: 10px 20px;
             background: #333;
             color: white;
@@ -40,17 +35,15 @@
             font-size: 1rem;
             z-index: 10;
         }
-        .back-btn:hover { 
-            background: #555; 
-        }
+        .back-btn:hover { background: #555; }
+
         .container { 
             padding: 30px 20px; 
             text-align: center; 
             flex: 1; 
         }
-        .section { 
-            margin: 40px 0; 
-        }
+
+        .section { margin: 40px 0; }
         .section h2 { 
             font-size: 1.8rem; 
             margin-bottom: 20px; 
@@ -58,6 +51,7 @@
             border-bottom: 1px solid #444; 
             padding-bottom: 10px; 
         }
+
         .buttons-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
@@ -65,6 +59,7 @@
             max-width: 1200px; 
             margin: 0 auto; 
         }
+
         .btn { 
             background: #1a1a1a; 
             color: white; 
@@ -76,23 +71,74 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.6); 
             border: 2px solid transparent; 
             display: block; 
+            cursor: pointer;
         }
-        .btn:hover { 
-            transform: translateY(-5px); 
+        .btn:hover { transform: translateY(-5px); }
+
+        .pop-btn { border-color: #8B0000; }
+        .vtr-btn { border-color: #006400; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
-        .pop-btn { 
-            border-color: #8B0000; 
+        .modal-content {
+            background: #111;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 420px;
+            border: 1px solid #444;
+            text-align: center;
         }
-        .vtr-btn { 
-            border-color: #006400; 
+        .modal-content h3 {
+            margin-top: 0;
+            color: #aaa;
         }
+        .modal-content p {
+            margin: 10px 0 20px;
+            color: #888;
+            font-size: 1.1rem;
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.3rem;
+            margin: 15px 0;
+            background: #222;
+            border: 1px solid #555;
+            color: white;
+            border-radius: 6px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .modal-content button {
+            padding: 14px 30px;
+            font-size: 1.2rem;
+            background: #006400;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        .modal-content button.cancel {
+            background: #8B0000;
+        }
+
         footer { 
-            text-align: center; 
-            padding: 15px; 
-            background: #1a1a1a; 
-            font-size: 0.8rem; 
-            color: #888; 
-            margin-top: auto; 
+            text-align: center;
+            padding: 15px;
+            background: #1a1a1a;
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: auto;
         }
     </style>
 </head>
@@ -108,39 +154,132 @@
         <div class="section">
             <h2>POP's</h2>
             <div class="buttons-grid">
-                <a href="mapas_pop/pop_01.html" class="btn pop-btn">POP-1</a>
-                <a href="mapas_pop/pop_02.html" class="btn pop-btn">POP-2</a>
-                <a href="mapas_pop/pop_03.html" class="btn pop-btn">POP-3</a>
-                <a href="mapas_pop/pop_04.html" class="btn pop-btn">POP-4</a>
-                <a href="mapas_pop/pop_05.html" class="btn pop-btn">POP-5</a>
-                <a href="mapas_pop/pop_06.html" class="btn pop-btn">POP-6</a>
-                <a href="mapas_pop/pop_07.html" class="btn pop-btn">POP-7</a>
-                <a href="mapas_pop/pop_08.html" class="btn pop-btn">POP-8</a>
-                <a href="mapas_pop/pop_09.html" class="btn pop-btn">POP-9</a>
-                <a href="mapas_pop/pop_10.html" class="btn pop-btn">POP-10</a>
-                <a href="mapas_pop/pop_11.html" class="btn pop-btn">POP-11</a>
-                <a href="mapas_pop/pop_12.html" class="btn pop-btn">POP-12</a>
-                <a href="mapas_pop/pop_13.html" class="btn pop-btn">POP-13</a>
-                <a href="mapas_pop/pop_14.html" class="btn pop-btn">POP-14</a>
-                <a href="mapas_pop/pop_15.html" class="btn pop-btn">POP-15</a>
-                <a href="mapas_pop/pop_16.html" class="btn pop-btn">POP-16</a>
-                <a href="mapas_pop/pop_17.html" class="btn pop-btn">POP-17</a>
+                <a href="mapas_pop/pop_01.html" data-key="pop-1" class="btn pop-btn">POP-1</a>
+                <a href="mapas_pop/pop_02.html" data-key="pop-2" class="btn pop-btn">POP-2</a>
+                <a href="mapas_pop/pop_03.html" data-key="pop-3" class="btn pop-btn">POP-3</a>
+                <a href="mapas_pop/pop_04.html" data-key="pop-4" class="btn pop-btn">POP-4</a>
+                <a href="mapas_pop/pop_05.html" data-key="pop-5" class="btn pop-btn">POP-5</a>
+                <a href="mapas_pop/pop_06.html" data-key="pop-6" class="btn pop-btn">POP-6</a>
+                <a href="mapas_pop/pop_07.html" data-key="pop-7" class="btn pop-btn">POP-7</a>
+                <a href="mapas_pop/pop_08.html" data-key="pop-8" class="btn pop-btn">POP-8</a>
+                <a href="mapas_pop/pop_09.html" data-key="pop-9" class="btn pop-btn">POP-9</a>
+                <a href="mapas_pop/pop_10.html" data-key="pop-10" class="btn pop-btn">POP-10</a>
+                <a href="mapas_pop/pop_11.html" data-key="pop-11" class="btn pop-btn">POP-11</a>
+                <a href="mapas_pop/pop_12.html" data-key="pop-12" class="btn pop-btn">POP-12</a>
+                <a href="mapas_pop/pop_13.html" data-key="pop-13" class="btn pop-btn">POP-13</a>
+                <a href="mapas_pop/pop_14.html" data-key="pop-14" class="btn pop-btn">POP-14</a>
+                <a href="mapas_pop/pop_15.html" data-key="pop-15" class="btn pop-btn">POP-15</a>
+                <a href="mapas_pop/pop_16.html" data-key="pop-16" class="btn pop-btn">POP-16</a>
+                <a href="mapas_pop/pop_17.html" data-key="pop-17" class="btn pop-btn">POP-17</a>
             </div>
         </div>
 
         <div class="section">
             <h2>VTR's</h2>
             <div class="buttons-grid">
-                <a href="mapas_vtr/essgt_030.html" class="btn vtr-btn">ESSgt-030</a>
-                <a href="mapas_vtr/essgt_033.html" class="btn vtr-btn">ESSgt-033</a>
-                <a href="mapas_vtr/essgt_031.html" class="btn vtr-btn">ESSgt-031</a>
-                <a href="mapas_vtr/essgt_032.html" class="btn vtr-btn">ESSgt-032</a>
+                <a href="mapas_vtr/essgt_030.html" data-key="vtr-essgt-030" class="btn vtr-btn">ESSgt-030</a>
+                <a href="mapas_vtr/essgt_033.html" data-key="vtr-essgt-033" class="btn vtr-btn">ESSgt-033</a>
+                <a href="mapas_vtr/essgt_031.html" data-key="vtr-essgt-031" class="btn vtr-btn">ESSgt-031</a>
+                <a href="mapas_vtr/essgt_032.html" data-key="vtr-essgt-032" class="btn vtr-btn">ESSgt-032</a>
             </div>
         </div>
 
     </div>
 
+    <!-- Modal de senha -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h3>Autenticação Necessária</h3>
+            <p id="itemName"></p>
+            <input type="password" id="passwordInput" placeholder="Digite a senha" autocomplete="off">
+            <div style="margin-top: 25px;">
+                <button onclick="checkPassword()">Entrar</button>
+                <button class="cancel" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <footer>Sistema de Informação OBE • 2025</footer>
+
+    <script>
+        let senhas = null;
+        let currentUrl = '';
+        let currentSenhaCorreta = '';
+
+        // Carregar senhas do arquivo JSON
+        async function carregarSenhas() {
+            try {
+                const resposta = await fetch('senhas.json');
+                if (!resposta.ok) throw new Error('Falha ao carregar senhas');
+                senhas = await resposta.json();
+                console.log("Senhas carregadas com sucesso");
+            } catch (erro) {
+                console.error("Erro ao carregar senhas:", erro);
+                alert("Não foi possível carregar as senhas. Contate o administrador.");
+            }
+        }
+
+        // Carrega as senhas ao abrir a página
+        carregarSenhas();
+
+        // Configura os cliques nos botões
+        document.querySelectorAll('.buttons-grid a[data-key]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                if (!senhas) {
+                    alert("As senhas ainda não foram carregadas. Aguarde alguns segundos e tente novamente.");
+                    return;
+                }
+
+                const key = this.getAttribute('data-key');
+                currentUrl = this.getAttribute('href');           // ← agora pega o href
+                currentSenhaCorreta = senhas[key];
+
+                if (!currentSenhaCorreta) {
+                    alert("Senha não configurada para este item.");
+                    window.location.href = currentUrl;           // abre sem senha se não tiver cadastrada
+                    return;
+                }
+
+                const nomeItem = this.textContent.trim();
+
+                document.getElementById('itemName').textContent = nomeItem;
+                document.getElementById('passwordModal').style.display = 'flex';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            });
+        });
+
+        function checkPassword() {
+            const digitada = document.getElementById('passwordInput').value.trim();
+
+            if (digitada === currentSenhaCorreta) {
+                const urlParaAbrir = currentUrl;
+                
+                closeModal();
+                window.open(urlParaAbrir, '_blank', 'noopener,noreferrer');
+                // Ou use window.location.href = urlParaAbrir;  ← se quiser abrir na mesma aba
+            } else {
+                alert('Senha incorreta!');
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+            currentUrl = '';
+            currentSenhaCorreta = '';
+        }
+
+        // Fechar modal com tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
 
 </body>
 </html>
