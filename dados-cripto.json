@@ -1,0 +1,134 @@
+{
+  "usuarios": {
+    "admin": {
+      "itens": {
+        "pop-1": "U2FsdGVkX1+... [conteúdo criptografado para POP-1 com senha master]",
+        "pop-2": "U2FsdGVkX1+... [conteúdo criptografado para POP-2 com senha master]",
+        "pop-3": "U2FsdGVkX1+... [conteúdo criptografado para POP-3 com senha master]",
+        "pop-4": "U2FsdGVkX1+... [conteúdo criptografado para POP-4 com senha master]",
+        "pop-5": "U2FsdGVkX1+... [conteúdo criptografado para POP-5 com senha master]",
+        "pop-6": "U2FsdGVkX1+... [conteúdo criptografado para POP-6 com senha master]",
+        "pop-7": "U2FsdGVkX1+... [conteúdo criptografado para POP-7 com senha master]",
+        "pop-8": "U2FsdGVkX1+... [conteúdo criptografado para POP-8 com senha master]",
+        "pop-9": "U2FsdGVkX1+... [conteúdo criptografado para POP-9 com senha master]",
+        "pop-10": "U2FsdGVkX1+... [conteúdo criptografado para POP-10 com senha master]",
+        "pop-11": "U2FsdGVkX1+... [conteúdo criptografado para POP-11 com senha master]",
+        "pop-12": "U2FsdGVkX1+... [conteúdo criptografado para POP-12 com senha master]",
+        "pop-13": "U2FsdGVkX1+... [conteúdo criptografado para POP-13 com senha master]",
+        "pop-14": "U2FsdGVkX1+... [conteúdo criptografado para POP-14 com senha master]",
+        "pop-15": "U2FsdGVkX1+... [conteúdo criptografado para POP-15 com senha master]",
+        "pop-16": "U2FsdGVkX1+... [conteúdo criptografado para POP-16 com senha master]",
+        "pop-17": "U2FsdGVkX1+... [conteúdo criptografado para POP-17 com senha master]",
+        "vtr-essgt-030": "U2FsdGVkX1+... [conteúdo criptografado para ESSgt-030 com senha master]",
+        "vtr-essgt-033": "U2FsdGVkX1+... [conteúdo criptografado para ESSgt-033 com senha master]",
+        "vtr-essgt-031": "U2FsdGVkX1+... [conteúdo criptografado para ESSgt-031 com senha master]",
+        "vtr-essgt-032": "U2FsdGVkX1+... [conteúdo criptografado para ESSgt-032 com senha master]"
+      }
+    },
+    "pop1": {
+      "itens": {
+        "pop-1": "U2FsdGVkX1+... [conteúdo criptografado para POP-1 com senha do pop1]"
+      }
+    },
+    "pop2": {
+      "itens": {
+        "pop-2": "U2FsdGVkX1+... [conteúdo criptografado para POP-2 com senha do pop2]"
+      }
+    },
+    "pop3": {
+      "itens": {
+        "pop-3": "U2FsdGVkX1+... [conteúdo criptografado para POP-3 com senha do pop3]"
+      }
+    },
+    "pop4": {
+      "itens": {
+        "pop-4": "U2FsdGVkX1+... [conteúdo criptografado para POP-4 com senha do pop4]"
+      }
+    },
+    "pop5": {
+      "itens": {
+        "pop-5": "U2FsdGVkX1+... [conteúdo criptografado para POP-5 com senha do pop5]"
+      }
+    },
+    "pop6": {
+      "itens": {
+        "pop-6": "U2FsdGVkX1+... [conteúdo criptografado para POP-6 com senha do pop6]"
+      }
+    },
+    "pop7": {
+      "itens": {
+        "pop-7": "U2FsdGVkX1+... [conteúdo criptografado para POP-7 com senha do pop7]"
+      }
+    },
+    "pop8": {
+      "itens": {
+        "pop-8": "U2FsdGVkX1+... [conteúdo criptografado para POP-8 com senha do pop8]"
+      }
+    },
+    "pop9": {
+      "itens": {
+        "pop-9": "U2FsdGVkX1+... [conteúdo criptografado para POP-9 com senha do pop9]"
+      }
+    },
+    "pop10": {
+      "itens": {
+        "pop-10": "U2FsdGVkX1+... [conteúdo criptografado para POP-10 com senha do pop10]"
+      }
+    },
+    "pop11": {
+      "itens": {
+        "pop-11": "U2FsdGVkX1+... [conteúdo criptografado para POP-11 com senha do pop11]"
+      }
+    },
+    "pop12": {
+      "itens": {
+        "pop-12": "U2FsdGVkX1+... [conteúdo criptografado para POP-12 com senha do pop12]"
+      }
+    },
+    "pop13": {
+      "itens": {
+        "pop-13": "U2FsdGVkX1+... [conteúdo criptografado para POP-13 com senha do pop13]"
+      }
+    },
+    "pop14": {
+      "itens": {
+        "pop-14": "U2FsdGVkX1+... [conteúdo criptografado para POP-14 com senha do pop14]"
+      }
+    },
+    "pop15": {
+      "itens": {
+        "pop-15": "U2FsdGVkX1+... [conteúdo criptografado para POP-15 com senha do pop15]"
+      }
+    },
+    "pop16": {
+      "itens": {
+        "pop-16": "U2FsdGVkX1+... [conteúdo criptografado para POP-16 com senha do pop16]"
+      }
+    },
+    "pop17": {
+      "itens": {
+        "pop-17": "U2FsdGVkX1+... [conteúdo criptografado para POP-17 com senha do pop17]"
+      }
+    },
+    "vtr030": {
+      "itens": {
+        "vtr-essgt-030": "U2FsdGVkX1+... [conteúdo criptografado para ESSgt-030 com senha do vtr030]"
+      }
+    },
+    "vtr033": {
+      "itens": {
+        "vtr-essgt-033": "U2FsdGVkX1+... [conteúdo criptografado para ESSgt-033 com senha do vtr033]"
+      }
+    },
+    "vtr031": {
+      "itens": {
+        "vtr-essgt-031": "U2FsdGVkX1+... [conteúdo criptografado para ESSgt-031 com senha do vtr031]"
+      }
+    },
+    "vtr032": {
+      "itens": {
+        "vtr-essgt-032": "U2FsdGVkX1+... [conteúdo criptografado para ESSgt-032 com senha do vtr032]"
+      }
+    }
+  }
+}

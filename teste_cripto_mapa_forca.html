@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mapa Força - Sistema OBE</title>
+    <style>
+        body { margin:0; padding:0; font-family:Arial, sans-serif; background:#000; color:#fff; min-height:100vh; display:flex; flex-direction:column; }
+        header { background:#1a1a1a; padding:20px; text-align:center; border-bottom:2px solid #333; position: relative; }
+        h1 { margin:0; font-size:2.4rem; }
+        .back-btn { position: absolute; left: 20px; top: 20px; padding: 10px 20px; background: #333; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; z-index: 10; }
+        .back-btn:hover { background: #555; }
+        .container { padding: 30px 20px; text-align: center; flex: 1; }
+        .section { margin: 40px 0; }
+        .section h2 { font-size: 1.8rem; margin-bottom: 20px; color: #ccc; border-bottom: 1px solid #444; padding-bottom: 10px; }
+        .buttons-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; max-width: 1200px; margin: 0 auto; }
+        .btn { background: #1a1a1a; color: white; padding: 25px 15px; font-size: 1.3rem; font-weight: bold; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); border: 2px solid transparent; display: block; cursor: pointer; }
+        .btn:hover { transform: translateY(-5px); }
+        .pop-btn { border-color: #8B0000; }
+        .vtr-btn { border-color: #006400; }
+        /* Modal */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #111; padding: 30px; border-radius: 12px; width: 90%; max-width: 420px; border: 1px solid #444; text-align: center; }
+        .modal-content h3 { margin-top: 0; color: #aaa; }
+        .modal-content p { margin: 10px 0 20px; color: #888; font-size: 1.1rem; }
+        .modal-content input { width: 100%; padding: 14px; font-size: 1.3rem; margin: 15px 0; background: #222; border: 1px solid #555; color: white; border-radius: 6px; text-align: center; letter-spacing: 2px; }
+        .modal-content button { padding: 14px 30px; font-size: 1.2rem; background: #006400; color: white; border: none; border-radius: 8px; cursor: pointer; margin: 0 10px; }
+        .modal-content button.cancel { background: #8B0000; }
+        footer { text-align: center; padding: 15px; background: #1a1a1a; font-size: 0.8rem; color: #888; margin-top: auto; }
+        /* Novo: Conteúdo descriptografado */
+        #conteudo-descripto { margin-top: 20px; padding: 20px; background: #1a1a1a; border-radius: 8px; display: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="back-btn">← Voltar ao Menu Principal</a>
+        <h1>Mapa Força</h1>
+    </header>
+    <div class="container">
+        <div class="section">
+            <h2>POP's</h2>
+            <div class="buttons-grid">
+                <button data-key="pop-1" class="btn pop-btn">POP-1</button>
+                <button data-key="pop-2" class="btn pop-btn">POP-2</button>
+                <button data-key="pop-3" class="btn pop-btn">POP-3</button>
+                <button data-key="pop-4" class="btn pop-btn">POP-4</button>
+                <button data-key="pop-5" class="btn pop-btn">POP-5</button>
+                <button data-key="pop-6" class="btn pop-btn">POP-6</button>
+                <button data-key="pop-7" class="btn pop-btn">POP-7</button>
+                <button data-key="pop-8" class="btn pop-btn">POP-8</button>
+                <button data-key="pop-9" class="btn pop-btn">POP-9</button>
+                <button data-key="pop-10" class="btn pop-btn">POP-10</button>
+                <button data-key="pop-11" class="btn pop-btn">POP-11</button>
+                <button data-key="pop-12" class="btn pop-btn">POP-12</button>
+                <button data-key="pop-13" class="btn pop-btn">POP-13</button>
+                <button data-key="pop-14" class="btn pop-btn">POP-14</button>
+                <button data-key="pop-15" class="btn pop-btn">POP-15</button>
+                <button data-key="pop-16" class="btn pop-btn">POP-16</button>
+                <button data-key="pop-17" class="btn pop-btn">POP-17</button>
+            </div>
+        </div>
+        <div class="section">
+            <h2>VTR's</h2>
+            <div class="buttons-grid">
+                <button data-key="vtr-essgt-030" class="btn vtr-btn">ESSgt-030</button>
+                <button data-key="vtr-essgt-033" class="btn vtr-btn">ESSgt-033</button>
+                <button data-key="vtr-essgt-031" class="btn vtr-btn">ESSgt-031</button>
+                <button data-key="vtr-essgt-032" class="btn vtr-btn">ESSgt-032</button>
+            </div>
+        </div>
+        <!-- Área para mostrar conteúdo descriptografado (opcional, pode ser em nova aba) -->
+        <div id="conteudo-descripto"></div>
+    </div>
+    <!-- Modal de autenticação (agora com usuário e senha) -->
+    <div id="loginModal" class="modal" style="display: flex;"> <!-- Começa visível para login inicial -->
+        <div class="modal-content">
+            <h3>Autenticação Necessária</h3>
+            <p>Entre com seu usuário e senha para acessar o sistema.</p>
+            <input type="text" id="usuarioInput" placeholder="Digite o usuário" autocomplete="off">
+            <input type="password" id="passwordInput" placeholder="Digite a senha" autocomplete="off">
+            <div style="margin-top: 25px;">
+                <button onclick="login()">Entrar</button>
+                <button class="cancel" onclick="closeLoginModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para item específico (se precisar de senha extra, mas simplificado) -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h3>Acesso ao Item</h3>
+            <p id="itemName"></p>
+            <div style="margin-top: 25px;">
+                <button onclick="acessarItem()">Acessar</button>
+                <button class="cancel" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <footer>Sistema de Informação OBE • 2025</footer>
+
+    <!-- Biblioteca CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+
+    <script>
+        let dadosCripto = null;
+        let usuarioLogado = null;
+        let senhaLogada = null;
+
+        // Exemplo de dados criptografados (gere esses localmente e substitua)
+        // Estrutura: por usuário, e dentro dele, por item (key como 'pop-1')
+        const dadosExemplo = {
+            "usuarios": {
+                "admin": { // Admin vê tudo
+                    "senha": "adminOBE2026", // Não armazene aqui! Use para gerar cripto localmente
+                    "itens": {
+                        "pop-1": "U2FsdGVkX1+... [criptografado com senha do admin]",
+                        "pop-2": "U2FsdGVkX19... [exemplo]",
+                        // Adicione todos os POP's e VTR's aqui, criptografados
+                        "vtr-essgt-030": "U2FsdGVkX1+... [exemplo]"
+                        // ... continue para todos
+                    }
+                },
+                "user1": { // User1 vê só alguns POP's
+                    "senha": "user1Beta2026",
+                    "itens": {
+                        "pop-1": "U2FsdGVkX1+... [criptografado com senha do user1]",
+                        "pop-2": "U2FsdGVkX19... [exemplo]",
+                        // Só os que ele tem acesso
+                    }
+                },
+                "user2": { // User2 vê VTR's
+                    "senha": "user2Gamma2026",
+                    "itens": {
+                        "vtr-essgt-030": "U2FsdGVkX1+... [exemplo]",
+                        // Só VTR's
+                    }
+                }
+            }
+        };
+
+        // Na produção, carregue de um arquivo JSON externo (sem as senhas reais!)
+        async function carregarDadosCripto() {
+            // const resposta = await fetch('dados-cripto.json');
+            // dadosCripto = await resposta.json();
+            dadosCripto = dadosExemplo; // Para exemplo, use o objeto acima
+            console.log("Dados criptografados carregados");
+        }
+
+        // Chame ao carregar a página
+        carregarDadosCripto();
+
+        // Função de login
+        function login() {
+            const usuario = document.getElementById('usuarioInput').value.trim().toLowerCase();
+            const senha = document.getElementById('passwordInput').value.trim();
+
+            if (!dadosCripto || !dadosCripto.usuarios[usuario]) {
+                alert("Usuário não encontrado");
+                return;
+            }
+
+            // Tenta descriptografar um item de teste ou verifica com um token criptografado
+            // Para simplicidade, assumimos que se descriptografar qualquer item, ok
+            const secaoUsuario = dadosCripto.usuarios[usuario];
+            const itemTeste = Object.keys(secaoUsuario.itens)[0]; // Primeiro item
+            try {
+                const bytes = CryptoJS.AES.decrypt(secaoUsuario.itens[itemTeste], senha);
+                const conteudo = bytes.toString(CryptoJS.enc.Utf8);
+                if (conteudo) {
+                    usuarioLogado = usuario;
+                    senhaLogada = senha;
+                    closeLoginModal();
+                    filtrarBotoesPorUsuario(); // Mostra só os botões que o usuário tem acesso
+                } else {
+                    alert("Senha incorreta");
+                }
+            } catch (e) {
+                alert("Senha incorreta ou erro na descriptografia");
+            }
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        // Filtra botões visíveis baseado no usuário logado
+        function filtrarBotoesPorUsuario() {
+            if (!usuarioLogado) return;
+            const secaoUsuario = dadosCripto.usuarios[usuarioLogado];
+            document.querySelectorAll('.buttons-grid button').forEach(btn => {
+                const key = btn.getAttribute('data-key');
+                if (!secaoUsuario.itens[key]) {
+                    btn.style.display = 'none'; // Esconde botões sem acesso
+                }
+            });
+        }
+
+        // Configura cliques nos botões
+        document.querySelectorAll('.buttons-grid button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (!usuarioLogado) {
+                    alert("Faça login primeiro");
+                    return;
+                }
+                const key = this.getAttribute('data-key');
+                const nomeItem = this.textContent.trim();
+                document.getElementById('itemName').textContent = nomeItem;
+                currentKey = key;
+                document.getElementById('passwordModal').style.display = 'flex'; // Modal simples para confirmar
+            });
+        });
+
+        let currentKey = '';
+
+        function acessarItem() {
+            const secaoUsuario = dadosCripto.usuarios[usuarioLogado];
+            const encrypted = secaoUsuario.itens[currentKey];
+            if (!encrypted) {
+                alert("Sem acesso a este item");
+                closeModal();
+                return;
+            }
+            try {
+                const bytes = CryptoJS.AES.decrypt(encrypted, senhaLogada);
+                const conteudo = bytes.toString(CryptoJS.enc.Utf8);
+                if (conteudo) {
+                    // Mostra inline ou abre nova aba
+                    document.getElementById('conteudo-descripto').innerHTML = conteudo;
+                    document.getElementById('conteudo-descripto').style.display = 'block';
+                    // Alternativa: abrir em nova aba
+                    // const novaAba = window.open();
+                    // novaAba.document.write(conteudo);
+                    closeModal();
+                } else {
+                    alert("Falha na descriptografia - acesso negado");
+                }
+            } catch (e) {
+                alert("Erro na descriptografia");
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+            currentKey = '';
+        }
+
+        // Fechar modals com ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeLoginModal();
+            }
+        });
+    </script>
+</body>
+</html>
